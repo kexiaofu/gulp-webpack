@@ -14,7 +14,7 @@ let gulp = require('gulp'),
     htmlmin = require('gulp-htmlmin');
 
 //dev
-gulp.task('dev',['server'],()=>{
+gulp.task('dev',['html','less','es6','imgs','server'],()=>{
   gulp.watch('./src/html/**/*.html',['html']);
   gulp.watch('./src/css/**/*.less',['less']);
   gulp.watch('./src/js/**/*.js',['es6']);
@@ -53,16 +53,10 @@ gulp.task('es6',()=>{
   return gulp.src('./src/js/**/*.js')
     .pipe(changed('./dev/js',{hasChanged: changed.compareLastModifiedTime}))
     .pipe(named())//对应的文件名
-    .pipe(webpack({//webpack也是异步的，导致会刷新2次才正确显示
-      output:{
-        filename:'[name].js'
-      },
-      module: {
-        rules: [
-          { test: /\.js$/, loader: 'babel-loader' },
-        ],
-      }
-    }))
+    .pipe(webpack(
+      //webpack也是异步的，导致会刷新2次才正确显示
+      config.webpackConfig
+    ))
     .pipe(gulp.dest('./dev/js'))
     //.pipe(reload({stream: true}))
 
