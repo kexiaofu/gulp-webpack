@@ -9,6 +9,7 @@ const gulp = require('gulp'),
       cleanCss = require('gulp-clean-css'),
       config = require('./config'),
       babel = require('gulp-babel'),
+      rename = require('gulp-rename'),
       imagemin = require('gulp-imagemin'),
       browserify = require('browserify'),
       named = require('vinyl-named'),
@@ -23,11 +24,12 @@ const path = require('path'),
 
 
 //dev
-gulp.task('dev',['html','less','es6','imgs','server'],()=>{
+gulp.task('dev',['html','less','test','imgs','server'],()=>{
   gulp.watch('./src/html/**/*.html',['html']);
   gulp.watch('./src/css/**/*.less',['less']);
-  //gulp.watch('./src/js/**/*.js',['es6']);
-  gulp.watch('./src/js/**/*.js',['test1']);
+  gulp.watch('./src/js/**/*.js',['test']);
+  gulp.watch('./changed/es6/**/*.js',['browserify']);
+  //gulp.watch('./changed/js/**/*.js',['es6']);
   gulp.watch('./src/images/**/*.{png,jpg,ico}',['imgs']);
 });
 
@@ -60,58 +62,64 @@ gulp.task('less',()=>{
 });
 
 gulp.task('clean-changed',()=>{
-  gulp.src('./changed')
+  gulp.src('./changed/es6')
     .pipe(clean())
 });
 
-gulp.task('test',['clean-changed'],()=>{
-  gulp.src('./src/js/**/*.js')
-    .pipe(changed('./dev/js',{hasChanged: changed.compareLastModifiedTime}))
-    .pipe(gulp.dest('./changed/js'))
-});
+let changedId = 0;
 
-gulp.task('es6',['test'],()=>{
+gulp.task('test',['clean-changed'],()=>{
 
   setTimeout(()=>{
-    fs.readdir('./changed',(err,files)=>{
-      if(err) {
-        return console.log(err);
-      }
-
-      if(files.length > 0) {
-        return gulp.src('./changed/js/**/*.js')
-          .pipe(named())//对应的文件名
-          .pipe(babel({
-            presets: ['@babel/env'],
-            plugins: ['@babel/transform-runtime']
-          }))
-          .pipe(gulp.dest(path.join(__dirname,'./changed/js')))
-      }
-    });
-  },0);
-
-
-
+    changedId++;
+    gulp.src('./src/js/**/*.js')
+      .pipe(changed('./dev/js',{hasChanged: changed.compareLastModifiedTime}))
+      //.pipe(named())//对应的文件名
+      .pipe(rename((path)=>{
+        path.basename += '-' + changedId;
+      }))
+      .pipe(babel({
+        presets: ['@babel/env'],
+        plugins: ['@babel/transform-runtime']
+      }))
+      .pipe(gulp.dest('./changed/es6'));
+  },100);
 
 });
 
-gulp.task('browserify',['es6'], function() {
-  glob('./changed/js/**/*.js',{},(err,files)=>{
-    console.log(files);
-    files.map(file=>{
-      let b = browserify(file)
-            .bundle()
-            .pipe(source(file+'-bundle.js'))
-            .pipe(buffer())
-            .pipe(gulp.dest(path.join(__dirname,'./dev/js')));
+/*gulp.task('es6',['test'],()=>{
+
+  let stop = setInterval(()=>{
+    fs.readdir('./changed/js/',(err,files)=>{
+      err && console.log(err);
+      console.log(files)
+      if(files !== undefined && files.length > 0) {
+        clearInterval(stop);
+        gulp.src('./changed/js/!**!/!*.js')
+
+      }
     });
+  },100);
+});*/
+
+
+gulp.task('browserify', function() {
+
+  glob('./changed/es6/**/*.js',{},(err,files)=>{
+    console.log(files);
+    let filename = '';
+    files.map((file,index)=>{
+      filename = file.replace('./changed/es6','.').replace('.js','');
+      console.log(filename);
+      let b = browserify(file)
+        .bundle()
+        .pipe(source(filename+'-bundle.js'))
+        .pipe(buffer())
+        .pipe(gulp.dest('./dev/js'));
+    });
+    console.log('---over---')
   });
-  //gulp.run('clean-changed')
-  /*return browserify('./dev/js/index.js')
-    .bundle()
-    .pipe(source('bundle.js')) // gives streaming vinyl file object
-    .pipe(buffer())
-    .pipe(gulp.dest('./dev/js'));*/
+
 });
 
 gulp.task('imgs',()=>{

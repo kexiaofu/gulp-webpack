@@ -1,4 +1,7 @@
+"use strict";
+
 //import template from './template';
+
 /*import axios from 'axios';
 axios.get('wwww.baidu.com')
   .then(res=>{
@@ -8,6 +11,7 @@ axios.get('wwww.baidu.com')
     console.log(err)
   })*/
 var template = require('./template');
+
 var data = {
   title: '基本例子',
   isAdmin: true,

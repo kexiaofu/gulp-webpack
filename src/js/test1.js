@@ -1,7 +1,7 @@
 
 //import jq from './jquery-3.3.1.min';//用于提取公共模块做测试
 
-let a1 = 1110123;
+let a1 = 112233;
 
 const test = async ()=>{
   await console.log(a1);
