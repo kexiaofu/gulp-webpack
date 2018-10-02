@@ -13,7 +13,7 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 //import jq from './jquery-3.3.1.min';//用于提取公共模块做测试
-var a1 = 1122;
+var a1 = 1234;
 
 var test =
 /*#__PURE__*/
