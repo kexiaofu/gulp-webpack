@@ -2,30 +2,41 @@
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _template = _interopRequireDefault(require("./template"));
+var _carousel = _interopRequireDefault(require("./carousel"));
 
-//import $ from './jquery-3.3.1.min';//用于提取公共模块做测试
-//import test from './test1';
-var data = {
-  title: '基本例子12345',
-  isAdmin: true,
-  list: ['文艺', '博客', '摄影', '电影', '民谣', '旅行', '吉他']
-};
-var html = (0, _template.default)('test', data);
-document.getElementById('index').innerHTML = html;
-/*
-let a = 11101;
-
-console.log(test,132,345);
-
-let b = ()=>{
-  console.log('reload hello ');
-  return ++a;
+window.onload = function () {
+  console.log(document.querySelector('.carousel-container'));
+  var carousel = new _carousel.default({
+    parent: 'carousel-container',
+    images: ['../images/1.jpg', '../images/2.jpeg', '../images/3.jpeg']
+  }); //carouselPlay();
 };
 
-let c = async () =>{
-  let d = await b();
-  console.log(d)
-};
+var carouselPlay = function carouselPlay() {
+  var eles = document.querySelectorAll('.carousel-item'),
+      len = eles.length;
+  var activeIndex = 1,
+      prevIndex = 0;
+  setInterval(function () {
+    console.log(activeIndex, prevIndex);
+    eles[activeIndex].style.visibility = 'visible';
+    eles[prevIndex].style.visibility = 'visible';
+    eles[activeIndex].style.transition = 'none';
+    eles[activeIndex].style.transform = 'translateX(100%)';
+    setTimeout(function () {
+      eles[activeIndex].style.transition = 'transform 1s linear';
+      eles[activeIndex].style.transform = 'translateX(0%)';
+      eles[prevIndex].style.transform = 'translateX(-100%)';
 
-c();*/
+      if (activeIndex++ >= len - 1) {
+        activeIndex = 0;
+      }
+
+      if (activeIndex > 0) {
+        prevIndex = activeIndex - 1;
+      } else {
+        prevIndex = len - 1;
+      }
+    }, 0);
+  }, 2000);
+};

@@ -1,31 +1,49 @@
-//import $ from './jquery-3.3.1.min';//用于提取公共模块做测试
-//import test from './test1';
+import Carousel from './carousel';
 
-import template from './template';
+window.onload = () =>{
+  console.log(document.querySelector('.carousel-container'))
+  let carousel = new Carousel({
+    parent:'carousel-container',
+    images:['../images/1.jpg','../images/2.jpeg','../images/3.jpeg']
+  });
 
+  //carouselPlay();
 
-var data = {
-  title: '基本例子12345',
-  isAdmin: true,
-  list: ['文艺', '博客', '摄影', '电影', '民谣', '旅行', '吉他']
-};
-var html = template('test', data);
-document.getElementById('index').innerHTML = html;
-
-
-/*
-let a = 11101;
-
-console.log(test,132,345);
-
-let b = ()=>{
-  console.log('reload hello ');
-  return ++a;
 };
 
-let c = async () =>{
-  let d = await b();
-  console.log(d)
-};
+let carouselPlay =()=>{
+  let eles = document.querySelectorAll('.carousel-item'),
+      len = eles.length;
 
-c();*/
+  let activeIndex = 1,prevIndex = 0;
+
+  setInterval(()=>{
+
+    console.log(activeIndex,prevIndex);
+
+    eles[activeIndex].style.visibility = 'visible';
+    eles[prevIndex].style.visibility = 'visible';
+
+    eles[activeIndex].style.transition = 'none';
+    eles[activeIndex].style.transform = 'translateX(100%)';
+    setTimeout(()=>{
+      eles[activeIndex].style.transition = 'transform 1s linear';
+      eles[activeIndex].style.transform = 'translateX(0%)';
+      eles[prevIndex].style.transform = 'translateX(-100%)';
+      if(activeIndex++ >= len-1) {
+        activeIndex = 0
+      }
+
+      if(activeIndex > 0) {
+        prevIndex = activeIndex - 1;
+      } else {
+        prevIndex = len-1
+      }
+
+    },0);
+
+
+  },2000);
+
+
+};

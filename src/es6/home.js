@@ -1,16 +1,10 @@
-import axios from 'axios';
-/*import template from './template'
-*/
-axios.get('wwww.baidu.com')
-  .then(res=>{
-    console.log(res)
-  })
-  .catch(err=>{
-    console.log(err)
-  });
+import template from './template';
 
-let a = async () => {
-  await console.log('ok!！');
+
+var data = {
+  title: '基本例子12345',
+  isAdmin: true,
+  list: ['文艺', '博客', '摄影', '电影', '民谣', '旅行', '吉他']
 };
-
-a();
+var html = template('test', data);
+document.getElementById('home').innerHTML = html;

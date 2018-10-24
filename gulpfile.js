@@ -2,11 +2,13 @@ let gulp = require('gulp'),
   autofix = require('gulp-autoprefixer'),
   changed = require('gulp-changed'),
   less = require('gulp-less'),
+  plumber = require('gulp-plumber'),
   browserSync = require('browser-sync'),
   reload = browserSync.reload,
   browserify = require('browserify'),
   source = require('vinyl-source-stream'),
   buffer = require('vinyl-buffer'),
+  proxy = require('http-proxy-middleware'),
   babel = require('gulp-babel');
 
 let fs = require('fs'),path = require('path');
@@ -44,13 +46,12 @@ let fileDisplay = (filePath) => {
             if(isFile){
               let jsPath = path.win32.basename(filedir) ,
                 destPath = path.parse(filedir).dir.replace('es5','js');
-              console.log(filedir,jsPath,destPath);
+              console.log(filedir,jsPath,destPath,'first');
               browserify(filedir)
                 .bundle()
                 .pipe(source(jsPath))
                 .pipe(buffer())
-                .pipe(gulp.dest(destPath))
-                .pipe(reload({stream: true}));
+                .pipe(gulp.dest(destPath));
             }
             if(isDir){
               fileDisplay(filedir);//递归，如果是文件夹，就继续遍历该文件夹下面的文件
@@ -66,6 +67,7 @@ let fileDisplay = (filePath) => {
 gulp.task('babel',()=>{
   return gulp.src('src/es6/**/*.js')
     .pipe(changed('./src/es5',{hasChanged: changed.compareLastModifiedTime}))
+    .pipe(plumber())
     .pipe(babel({
       presets: ['@babel/env'],
       plugins: ['@babel/transform-runtime']
@@ -73,17 +75,19 @@ gulp.task('babel',()=>{
     .pipe(gulp.dest('src/es5/'))
 });
 
+/*
 //开发时复制HTML到dev目录
 gulp.task('dev-copyHtml',()=>{
-  return gulp.src('src/html/**/*.html')
+  return gulp.src('src/html/!**!/!*.html')
     .pipe(reload({stream: true}))
 });
 
 //开发时复制images到dev目录
 gulp.task('dev-copyImages',()=>{
-  return gulp.src('src/images/**/*.*')
+  return gulp.src('src/images/!**!/!*.*')
     .pipe(reload({stream: true}))
 });
+*/
 
 //less -> css
 gulp.task('less',()=>{
@@ -109,33 +113,38 @@ gulp.task('less',()=>{
     .pipe(reload({stream: true}))
 });
 
+let proxyApi = proxy('/api',{
+  target:'http://192.169.2.157:56790',
+  changeOrigin:true
+});
+
 //开启服务
 gulp.task('server',()=>{
   browserSync.init({
     server: {
-      baseDir:'src',
-      index:'html/index.html',
-      open: 'external',   // 决定Browsersync启动时自动打开的网址 external 表示 可外部打开 url, 可以在同一 wifi 下不同终端测试
-      injectChanges: true // 注入CSS改变,
+      baseDir:'./',
+      //index:'src/html/index.html',
+      middleware:[proxyApi]
     },
     port:8086,
-    files:['**/*.js','**/*.html','**/*.css']
+    open: false,
+    injectChanges: true // 注入CSS改变,
+    //files:['**/*.js','**/*.html','**/*.css']
   })
 });
 
-gulp.task('dealwithes6',async ()=>{
-  await gulp.src('src/es6/**/*.js')
-    .pipe(babel({
-      presets: ['@babel/env'],
-      plugins: ['@babel/transform-runtime']
-    }))
-    .pipe(gulp.dest('src/es5/'))
-
-  await fileDisplay('src/es5/');
+gulp.task('dealwithes6',()=>{
+   return gulp.src('src/es6/**/*.js')
+      .pipe(plumber())
+      .pipe(babel({
+        presets: ['@babel/env'],
+        plugins: ['@babel/transform-runtime']
+      }))
+      .pipe(gulp.dest('src/es5/'))
 });
 
-gulp.task('buildAllJs',()=>{
-
+gulp.task('buildAllJs',['dealwithes6'],()=>{
+  return fileDisplay('src/es5/');
 });
 
 gulp.task('dealwithless',()=>{
@@ -160,7 +169,7 @@ gulp.task('dealwithless',()=>{
 });
 
 //开发
-gulp.task('dev', ['dealwithes6','dealwithless','server'], ()=>{
+gulp.task('dev', ['buildAllJs','dealwithless','server'], ()=>{
 
   gulp.watch('src/es6/**/*.js', ['babel']);
 
@@ -168,7 +177,7 @@ gulp.task('dev', ['dealwithes6','dealwithless','server'], ()=>{
     let realPath = e.path.split(path.delimiter)[0],
       jsPath = path.win32.basename(realPath) ,
       destPath = path.parse(realPath).dir.replace('es5','js');
-    console.log(realPath,jsPath,destPath);
+    console.log(realPath,jsPath,destPath,'watch');
     if(e.type === 'changed' || e.type === 'added') {
       browserify(e.path)
         .bundle()
@@ -180,8 +189,8 @@ gulp.task('dev', ['dealwithes6','dealwithless','server'], ()=>{
   });
 
   gulp.watch('src/less/**/*.less',['less']);
-  gulp.watch('src/html/**/*.html',['dev-copyHtml']);
-  gulp.watch('src/images/**/*.*',['dev-copyImages']);
+  gulp.watch('src/html/**/*.html').on('change',browserSync.reload);
+  gulp.watch('src/images/**/*.*').on('change',browserSync.reload);
 
 
 
