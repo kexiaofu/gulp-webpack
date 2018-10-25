@@ -53,12 +53,15 @@ function () {
     (0, _classCallCheck2.default)(this, Carousel);
     //super(props);
     this.options = JSON.parse(JSON.stringify(Object.assign({}, {
-      playTime: 3000
+      playTime: 3000,
+      direction: true,
+      navigation: true
     }, options)));
     this.data = {
       parentWidth: 0,
       container: null,
-      activeIndex: 1
+      activeIndex: 0,
+      playStop: null
     };
     this.init();
   }
@@ -73,112 +76,187 @@ function () {
       if (options.images.length < 0) {
         alert('轮播图图片没有上传');
       } else {
-        console.log(document.querySelector(".".concat(options.parent)).offsetWidth, options);
+        //console.log(document.querySelector(`.${options.parent}`).offsetWidth,options);
         var parent = document.querySelector(".".concat(options.parent)),
             images = options.images;
-        var container = document.createElement('div'),
-            pointContainer = document.createElement('ul');
+        var container = document.createElement('div');
         container.className = 'carousel';
-        pointContainer.className = 'point-container';
         container.style.width = parent.offsetWidth + 'px';
+        container.style.height = parent.offsetHeight + 'px';
         this.data.container = container;
         parent.appendChild(container);
-        parent.appendChild(pointContainer);
 
         for (var i = 0, l = images.length; i < l; i++) {
-          this.createImageItem(images[i], container, parent.offsetWidth, i);
+          this.createImageItem(images[i], container, parent.offsetWidth, parent.offsetHeight, i);
         }
 
-        this.createPoint(images.length, pointContainer);
-        pointContainer.addEventListener('click', function (e) {
-          _this.getPoint(e);
-        }); //this.carouselPlay();
-        //options.container.style.width = options.images.length * options.width + 'px'
+        if (options.navigation) {
+          var pointContainer = document.createElement('ul');
+          pointContainer.className = 'point-container';
+          parent.appendChild(pointContainer);
+          this.createPoint(images.length, pointContainer);
+          pointContainer.addEventListener('click', function (e) {
+            _this.getPoint(e);
+          });
+        }
+
+        if (options.direction) {
+          this.createDirectionIcon(parent);
+        }
+
+        if (options.autoPlay) {
+          this.carouselPlay();
+        }
+
+        window.addEventListener('resize', function () {
+          var carousel = document.querySelectorAll('.carousel-item'),
+              parentW = document.querySelector(".".concat(options.parent)).offsetWidth;
+
+          for (var _i = carousel.length - 1; _i >= 0; _i--) {
+            carousel[_i].style.width = parentW + 'px';
+          }
+        }); //options.container.style.width = options.images.length * options.width + 'px'
       }
     }
   }, {
     key: "carouselPlay",
-    value: function carouselPlay(index) {
+    value: function carouselPlay() {
+      var _this2 = this;
+
       var options = this.options,
           playTime = options.playTime,
-          activeIndex = index ? index : this.data.activeIndex,
+          activeIndex = this.data.activeIndex,
           len = options.images.length,
-          eles = document.querySelectorAll('.carousel-item');
-      console.log(options.images, options.images.length);
-      var prevIndex = 0;
+          eles = document.querySelectorAll('.carousel-item'); //console.log(options.images,options.images.length);
+
+      var prevIndex = 0; //activeIndex++;
+
+      clearInterval(this.data.playStop);
       this.data.playStop = setInterval(function () {
-        eles[activeIndex].style.visibility = 'visible';
-        eles[prevIndex].style.visibility = 'visible';
-        eles[activeIndex].style.transition = 'none';
-        eles[activeIndex].style.transform = 'translateX(100%)';
-        setTimeout(function () {
-          eles[activeIndex].style.transition = 'transform 1s linear';
-          eles[activeIndex].style.transform = 'translateX(0%)';
-          eles[prevIndex].style.transform = 'translateX(-100%)';
+        if (activeIndex++ >= len - 1) {
+          activeIndex = 0;
+        }
 
-          if (activeIndex++ >= len - 1) {
-            activeIndex = 0;
-          }
+        if (activeIndex > 0) {
+          prevIndex = activeIndex - 1;
+        } else {
+          prevIndex = len - 1;
+        }
 
-          if (activeIndex > 0) {
-            prevIndex = activeIndex - 1;
-          } else {
-            prevIndex = len - 1;
-          }
-        }, 0);
+        _this2.toThisCarousel(eles, activeIndex, prevIndex, 1, false);
       }, playTime);
     }
   }, {
     key: "getPoint",
     value: function getPoint(e) {
-      console.log(e.target, 'index');
-
-      if (e.target.className === 'point') {
+      if (e.target.className.indexOf('point') > -1) {
         var index = e.target.getAttribute('data-point'),
-            eles = document.querySelectorAll('.carousel-item'),
-            prevIndex = 0;
+            eles = document.querySelectorAll('.carousel-item'); //console.log(index,this.data.activeIndex);
 
-        if (index > 0) {
-          prevIndex = index - 1;
-        } else {
-          prevIndex = eles.length - 1;
-        }
-
-        this.toThisCarousel(eles, index, prevIndex);
+        clearInterval(this.data.playStop);
+        this.toThisCarousel(eles, index - 0, this.data.activeIndex, null, true);
       }
     }
   }, {
     key: "toThisCarousel",
-    value: function toThisCarousel(eles, index, prevIndex) {
+    value: function toThisCarousel(eles, index, prevIndex, hadDirection, start) {
+      var _this3 = this;
+
+      //console.log(index , prevIndex,index === prevIndex);
+      if (index === prevIndex) {
+        return;
+      }
+
       eles[index].style.visibility = 'visible';
       eles[prevIndex].style.visibility = 'visible';
+      var direction = hadDirection !== null ? hadDirection : index > prevIndex ? 1 : -1;
       eles[index].style.transition = 'none';
-      eles[index].style.transform = 'translateX(100%)';
+      eles[index].style.transform = "translateX(".concat(direction * 100, "%)");
       setTimeout(function () {
-        eles[index].style.transition = 'transform 1s linear';
+        eles[index].style.transition = 'transform .3s linear';
         eles[index].style.transform = 'translateX(0%)';
-        eles[prevIndex].style.transform = 'translateX(-100%)';
+        eles[prevIndex].style.transform = "translateX(".concat(-direction * 100, "%)");
+        _this3.data.activeIndex = index;
+
+        if (_this3.options.navigation) {
+          var prevPoint = document.querySelector(".active-point");
+          prevPoint.className = prevPoint.className.replace('active-point', '');
+          document.querySelector(".point".concat(index)).className = "point point".concat(index, " active-point");
+        }
+
+        if (_this3.options.autoPlay && start) {
+          _this3.carouselPlay();
+        }
       }, 0);
+    }
+  }, {
+    key: "createDirectionIcon",
+    value: function createDirectionIcon(parent) {
+      var _this4 = this;
+
+      var leftIcon = document.createElement('div'),
+          limg = document.createElement('img'),
+          rightIcon = document.createElement('div'),
+          rimg = document.createElement('img');
+      limg.src = '../images/left-icon.png';
+      rimg.src = '../images/left-icon.png';
+      leftIcon.className = 'left-icon';
+      rightIcon.className = 'right-icon';
+      leftIcon.appendChild(limg);
+      rightIcon.appendChild(rimg);
+      parent.appendChild(leftIcon);
+      parent.appendChild(rightIcon);
+      leftIcon.addEventListener('click', function (e) {
+        var eles = document.querySelectorAll('.carousel-item'),
+            activeIndex = _this4.data.activeIndex,
+            prevIndex = activeIndex;
+
+        if (activeIndex - 1 >= 0) {
+          activeIndex = activeIndex - 1;
+        } else {
+          activeIndex = eles.length - 1;
+        }
+
+        clearInterval(_this4.data.playStop);
+
+        _this4.toThisCarousel(eles, activeIndex, prevIndex, -1, true);
+      });
+      rightIcon.addEventListener('click', function (e) {
+        var eles = document.querySelectorAll('.carousel-item'),
+            activeIndex = _this4.data.activeIndex,
+            prevIndex = activeIndex;
+
+        if (activeIndex + 1 < eles.length) {
+          activeIndex = activeIndex + 1;
+        } else {
+          activeIndex = 0;
+        }
+
+        clearInterval(_this4.data.playStop);
+
+        _this4.toThisCarousel(eles, activeIndex, prevIndex, 1, true);
+      });
     }
   }, {
     key: "createPoint",
     value: function createPoint(count, parent) {
       for (var i = 0; i < count; i++) {
         var point = document.createElement('li');
-        point.className = 'point';
-        i === 0 && (point.className = 'point active');
+        point.className = "point point".concat(i);
+        i === 0 && (point.className = 'point point0 active-point');
         point.setAttribute('data-point', i);
         parent.appendChild(point);
       }
     }
   }, {
     key: "createImageItem",
-    value: function createImageItem(src, parent, w, index) {
+    value: function createImageItem(src, parent, w, h, index) {
       var carousel = document.createElement('div'),
           image = document.createElement('img');
       image.src = src;
       carousel.className = 'carousel-item';
       carousel.style.width = w + 'px';
+      carousel.style.height = h + 'px';
       carousel.style.visibility = index !== 0 ? 'hidden' : 'visible';
       carousel.appendChild(image);
       parent.appendChild(carousel);

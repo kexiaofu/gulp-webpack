@@ -93,6 +93,7 @@ gulp.task('dev-copyImages',()=>{
 gulp.task('less',()=>{
   return gulp.src('./src/less/**/*.less')
     .pipe(changed('./src/css',{hasChanged: changed.compareLastModifiedTime}))
+    .pipe(plumber())
     .pipe(less())
     .pipe(autofix({
       browsers: [

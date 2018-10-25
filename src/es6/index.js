@@ -1,49 +1,28 @@
 import Carousel from './carousel';
 
+import Alert from './alert';
+import Confirm from './confirm';
+
 window.onload = () =>{
   console.log(document.querySelector('.carousel-container'))
   let carousel = new Carousel({
+    navigation:false,
+    direction:false,
+    autoPlay:true,
     parent:'carousel-container',
     images:['../images/1.jpg','../images/2.jpeg','../images/3.jpeg']
   });
 
-  //carouselPlay();
+  let confirm = new Confirm();
 
-};
 
-let carouselPlay =()=>{
-  let eles = document.querySelectorAll('.carousel-item'),
-      len = eles.length;
-
-  let activeIndex = 1,prevIndex = 0;
-
-  setInterval(()=>{
-
-    console.log(activeIndex,prevIndex);
-
-    eles[activeIndex].style.visibility = 'visible';
-    eles[prevIndex].style.visibility = 'visible';
-
-    eles[activeIndex].style.transition = 'none';
-    eles[activeIndex].style.transform = 'translateX(100%)';
-    setTimeout(()=>{
-      eles[activeIndex].style.transition = 'transform 1s linear';
-      eles[activeIndex].style.transform = 'translateX(0%)';
-      eles[prevIndex].style.transform = 'translateX(-100%)';
-      if(activeIndex++ >= len-1) {
-        activeIndex = 0
+  setTimeout(()=>{
+    confirm.show({
+      title:'he',
+      content:'DDDD123',
+      ok:()=>{
+        console.log('ok')
       }
-
-      if(activeIndex > 0) {
-        prevIndex = activeIndex - 1;
-      } else {
-        prevIndex = len-1
-      }
-
-    },0);
-
-
-  },2000);
-
-
+    });
+  },1000);
 };

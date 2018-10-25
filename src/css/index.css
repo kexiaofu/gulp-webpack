@@ -7,18 +7,11 @@ a {
   text-decoration: none;
   color: #333;
 }
-#index .carousel-container {
-  position: absolute;
-  width: 100%;
-  overflow: hidden;
-  height: 305px;
-  background: #f00;
-}
-#index .carousel {
+.carousel {
   position: absolute;
   z-index: 9;
 }
-#index .carousel .carousel-item {
+.carousel .carousel-item {
   position: absolute;
   transition: -webkit-transform 1s linear;
   transition: transform 1s linear;
@@ -26,11 +19,11 @@ a {
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
 }
-#index .carousel .carousel-item img {
+.carousel .carousel-item img {
   width: 100%;
-  height: 300px;
+  height: 100%;
 }
-#index .point-container {
+.point-container {
   position: absolute;
   left: 50%;
   bottom: 0px;
@@ -40,7 +33,7 @@ a {
   list-style-type: none;
   z-index: 10;
 }
-#index .point-container .point {
+.point-container .point {
   cursor: pointer;
   margin: 0 5px;
   float: left;
@@ -48,6 +41,189 @@ a {
   height: 3px;
   background: rgba(255, 255, 255, 0.5);
 }
-#index .point-container .active {
+.point-container .active-point {
   background: #ffffff;
+}
+.left-icon {
+  position: absolute;
+  width: 80px;
+  height: 100%;
+  left: 0;
+  z-index: 11;
+  cursor: pointer;
+  box-shadow: 0 0 120px rgba(0, 0, 0, 0.2) inset;
+  transition: background 0.3s ease;
+}
+.left-icon img {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+.right-icon {
+  position: absolute;
+  width: 80px;
+  height: 100%;
+  right: 0;
+  z-index: 11;
+  cursor: pointer;
+  box-shadow: 0 0 120px rgba(0, 0, 0, 0.2) inset;
+}
+.right-icon img {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%) scale(-1);
+      -ms-transform: translate(-50%, -50%) scale(-1);
+          transform: translate(-50%, -50%) scale(-1);
+}
+.left-icon:hover,
+.right-icon:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+.mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 99;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  transition: opacity 0.5s ease;
+  opacity: 0;
+}
+.my-alert {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%) scale(0, 0);
+      -ms-transform: translate(-50%, -50%) scale(0, 0);
+          transform: translate(-50%, -50%) scale(0, 0);
+  z-index: 100;
+  background: #fff;
+  width: 400px;
+  min-height: 160px;
+  max-height: 300px;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: -webkit-transform 0.5s ease;
+  transition: transform 0.5s ease;
+  transition: transform 0.5s ease, -webkit-transform 0.5s ease;
+}
+.my-alert .my-alert-title {
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  border-bottom: 1px solid #ececec;
+  color: #333;
+}
+.my-alert .my-alert-content {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-size: 18px;
+  min-height: 80px;
+}
+.my-alert .my-alert-footer {
+  position: absolute;
+  bottom: 0;
+  border-top: 1px solid #ececec;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  color: #999;
+  cursor: pointer;
+}
+.my-confirm {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%) scale(0, 0);
+      -ms-transform: translate(-50%, -50%) scale(0, 0);
+          transform: translate(-50%, -50%) scale(0, 0);
+  z-index: 100;
+  background: #fff;
+  width: 400px;
+  min-height: 160px;
+  max-height: 300px;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: -webkit-transform 0.5s ease;
+  transition: transform 0.5s ease;
+  transition: transform 0.5s ease, -webkit-transform 0.5s ease;
+}
+.my-confirm .my-confirm-title {
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  border-bottom: 1px solid #ececec;
+  color: #333;
+}
+.my-confirm .my-confirm-content {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-size: 18px;
+  min-height: 80px;
+}
+.my-confirm .my-confirm-footer {
+  position: absolute;
+  bottom: 0;
+  border-top: 1px solid #ececec;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  color: #999;
+  cursor: pointer;
+  background: #fff;
+  margin-top: 40px;
+}
+.my-confirm .my-confirm-ok,
+.my-confirm .my-confirm-cancel {
+  float: left;
+  width: 50%;
+  text-align: center;
+  color: #06e;
+}
+.my-confirm .my-confirm-cancel {
+  color: #f00;
+  position: relative;
+}
+.my-confirm .my-confirm-cancel::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 5%;
+  width: 1px;
+  height: 90%;
+  background: #ececec;
+}
+#index .carousel-container {
+  position: absolute;
+  width: 100%;
+  overflow: hidden;
+  height: 300px;
 }

@@ -1,0 +1,50 @@
+.my-alert {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%) scale(0, 0);
+      -ms-transform: translate(-50%, -50%) scale(0, 0);
+          transform: translate(-50%, -50%) scale(0, 0);
+  z-index: 100;
+  background: #fff;
+  width: 400px;
+  min-height: 160px;
+  max-height: 300px;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: -webkit-transform 0.5s ease;
+  transition: transform 0.5s ease;
+  transition: transform 0.5s ease, -webkit-transform 0.5s ease;
+}
+.my-alert .my-alert-title {
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  border-bottom: 1px solid #ececec;
+  color: #333;
+}
+.my-alert .my-alert-content {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-size: 18px;
+  min-height: 80px;
+}
+.my-alert .my-alert-footer {
+  position: absolute;
+  bottom: 0;
+  border-top: 1px solid #ececec;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  color: #999;
+  cursor: pointer;
+}
