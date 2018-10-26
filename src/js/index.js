@@ -76,9 +76,10 @@ function () {
       header.innerHTML = options.title;
       content.innerHTML = options.content;
       footer.innerHTML = options.btnText;
-      alert.appendChild(header);
+      options.hasOwnProperty('title') && alert.appendChild(header);
       alert.appendChild(content);
       alert.appendChild(footer);
+      alert.style.minHeight = options.hasOwnProperty('title') ? '160px' : '120px';
       document.querySelector('body').appendChild(alert);
       footer.addEventListener('click', function () {
         _this.hide();
@@ -95,7 +96,6 @@ function () {
       var _this2 = this;
 
       var option = Object.assign({
-        title: '提示',
         content: '',
         btnText: '关闭'
       }, options);
@@ -111,6 +111,7 @@ function () {
           _this2.footer.innerHTML = option.btnText;
           _this2.alert.style.display = 'block';
           setTimeout(function () {
+            _this2.alert.style.opacity = 1;
             _this2.alert.style.transform = 'translate(-50%,-50%) scale(1,1)';
           }, 0);
         }, 100);
@@ -121,6 +122,7 @@ function () {
         this.footer.innerHTML = option.btnText;
         this.alert.style.display = 'block';
         setTimeout(function () {
+          _this2.alert.style.opacity = 1;
           _this2.alert.style.transform = ' translate(-50%,-50%) scale(1,1)';
         }, 0);
       }
@@ -130,8 +132,9 @@ function () {
     value: function hide() {
       var _this3 = this;
 
-      if (this.alert) {
-        this.alert.style.transform = 'translate(-50%,-50%) scale(0,0)';
+      if (this.alert && this.alert.style.display === 'block') {
+        this.alert.style.transform = 'translate(-50%,-50%) scale(.7,.7)';
+        this.alert.style.opacity = 0;
         this.mask.hide();
         setTimeout(function () {
           _this3.alert.style.display = 'none';
@@ -444,6 +447,8 @@ function () {
       this.mask = new _mask.default();
       ok.addEventListener('click', function () {
         typeof options.ok === 'function' ? options.ok() : _this.hide();
+
+        _this.hide();
       });
       cancel.addEventListener('click', function () {
         _this.hide();
@@ -472,6 +477,7 @@ function () {
           _this2.confirm.style.display = 'block';
           setTimeout(function () {
             _this2.confirm.style.transform = 'translate(-50%,-50%) scale(1,1)';
+            _this2.confirm.style.opacity = 1;
           }, 0);
         }, 100);
       } else {
@@ -483,6 +489,7 @@ function () {
         this.confirm.style.display = 'block';
         setTimeout(function () {
           _this2.confirm.style.transform = ' translate(-50%,-50%) scale(1,1)';
+          _this2.confirm.style.opacity = 1;
         }, 0);
       }
     }
@@ -491,8 +498,9 @@ function () {
     value: function hide() {
       var _this3 = this;
 
-      if (this.confirm) {
-        this.confirm.style.transform = 'translate(-50%,-50%) scale(0,0)';
+      if (this.confirm && this.confirm.style.display === 'block') {
+        this.confirm.style.transform = 'translate(-50%,-50%) scale(.7,.7)';
+        this.confirm.style.opacity = 0;
         this.mask.hide();
         setTimeout(function () {
           _this3.confirm.style.display = 'none';
@@ -511,6 +519,8 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 
 var _carousel = _interopRequireDefault(require("./carousel"));
 
+var _toast = _interopRequireDefault(require("./toast"));
+
 var _alert = _interopRequireDefault(require("./alert"));
 
 var _confirm = _interopRequireDefault(require("./confirm"));
@@ -518,24 +528,29 @@ var _confirm = _interopRequireDefault(require("./confirm"));
 window.onload = function () {
   console.log(document.querySelector('.carousel-container'));
   var carousel = new _carousel.default({
-    navigation: false,
-    direction: false,
     autoPlay: true,
     parent: 'carousel-container',
     images: ['../images/1.jpg', '../images/2.jpeg', '../images/3.jpeg']
   });
   var confirm = new _confirm.default();
+  var alert = new _alert.default();
+  var toast = new _toast.default();
   setTimeout(function () {
-    confirm.show({
-      title: 'he',
-      content: 'DDDD123',
-      ok: function ok() {
-        console.log('ok');
+    /*alert.show({
+      content:'hello'
+    });*/
+    //toast.show();
+
+    /*confirm.show({
+      title:'he',
+      content:'DDDD123',
+      ok:()=>{
+        console.log('ok')
       }
-    });
+    });*/
   }, 1000);
 };
-},{"./alert":4,"./carousel":5,"./confirm":6,"@babel/runtime/helpers/interopRequireDefault":3}],8:[function(require,module,exports){
+},{"./alert":4,"./carousel":5,"./confirm":6,"./toast":9,"@babel/runtime/helpers/interopRequireDefault":3}],8:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -608,5 +623,120 @@ function () {
 }();
 
 exports.default = Mask;
+;
+},{"@babel/runtime/helpers/classCallCheck":1,"@babel/runtime/helpers/createClass":2,"@babel/runtime/helpers/interopRequireDefault":3}],9:[function(require,module,exports){
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var Toast =
+/*#__PURE__*/
+function () {
+  function Toast() {
+    (0, _classCallCheck2.default)(this, Toast);
+    this.toast = null;
+    this.icon = null;
+    this.content = null;
+  }
+
+  (0, _createClass2.default)(Toast, [{
+    key: "init",
+    value: function init(options) {
+      var toast = document.createElement('div'),
+          imgContain = document.createElement('div'),
+          img = document.createElement('img'),
+          content = document.createElement('div');
+      toast.className = 'my-toast';
+      imgContain.className = 'my-toast-icon-container';
+      img.className = 'my-toast-icon';
+      content.className = 'my-toast-content';
+      img.src = options.icon;
+      content.innerHTML = options.content;
+      imgContain.appendChild(img);
+      toast.appendChild(imgContain);
+      toast.appendChild(content);
+      document.querySelector('body').appendChild(toast);
+      this.toast = toast;
+      this.icon = img;
+      this.content = content;
+    }
+  }, {
+    key: "show",
+    value: function show(options) {
+      var _this = this;
+
+      /*
+      * type success/error/normal
+      * */
+      var option = Object.assign({
+        type: 'success',
+        icon: '../images/toast-succ.png',
+        content: null,
+        hideTime: 3000
+      }, options);
+
+      switch (option.type) {
+        case 'success':
+          option.icon = '../images/toast-succ.png';
+          option.content === null && (option.content = '成功');
+          break;
+
+        case 'error':
+          option.icon = '../images/toast-err.png';
+          option.content === null && (option.content = '错误');
+          break;
+
+        default:
+          option.icon = '../images/toast-normal.png';
+          option.content === null && (option.content = '其他');
+      }
+
+      if (this.toast) {
+        this.toast.style.display = 'block';
+        setTimeout(function () {
+          _this.toast.style.opacity = 1;
+          setTimeout(function () {
+            _this.hide();
+          }, option.hideTime);
+        }, 0);
+      } else {
+        this.init(option);
+        setTimeout(function () {
+          _this.toast.style.display = 'block';
+          setTimeout(function () {
+            _this.toast.style.opacity = 1;
+            setTimeout(function () {
+              _this.hide();
+            }, option.hideTime);
+          }, 0);
+        }, 100);
+      }
+    }
+  }, {
+    key: "hide",
+    value: function hide() {
+      var _this2 = this;
+
+      if (this.toast) {
+        this.toast.style.opacity = 0;
+        setTimeout(function () {
+          _this2.toast.style.display = 'none';
+        }, 500);
+      }
+    }
+  }]);
+  return Toast;
+}();
+
+exports.default = Toast;
 ;
 },{"@babel/runtime/helpers/classCallCheck":1,"@babel/runtime/helpers/createClass":2,"@babel/runtime/helpers/interopRequireDefault":3}]},{},[7]);

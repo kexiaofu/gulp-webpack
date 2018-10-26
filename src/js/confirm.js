@@ -97,6 +97,8 @@ function () {
       this.mask = new _mask.default();
       ok.addEventListener('click', function () {
         typeof options.ok === 'function' ? options.ok() : _this.hide();
+
+        _this.hide();
       });
       cancel.addEventListener('click', function () {
         _this.hide();
@@ -125,6 +127,7 @@ function () {
           _this2.confirm.style.display = 'block';
           setTimeout(function () {
             _this2.confirm.style.transform = 'translate(-50%,-50%) scale(1,1)';
+            _this2.confirm.style.opacity = 1;
           }, 0);
         }, 100);
       } else {
@@ -136,6 +139,7 @@ function () {
         this.confirm.style.display = 'block';
         setTimeout(function () {
           _this2.confirm.style.transform = ' translate(-50%,-50%) scale(1,1)';
+          _this2.confirm.style.opacity = 1;
         }, 0);
       }
     }
@@ -144,8 +148,9 @@ function () {
     value: function hide() {
       var _this3 = this;
 
-      if (this.confirm) {
-        this.confirm.style.transform = 'translate(-50%,-50%) scale(0,0)';
+      if (this.confirm && this.confirm.style.display === 'block') {
+        this.confirm.style.transform = 'translate(-50%,-50%) scale(.7,.7)';
+        this.confirm.style.opacity = 0;
         this.mask.hide();
         setTimeout(function () {
           _this3.confirm.style.display = 'none';

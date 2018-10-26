@@ -41,9 +41,10 @@ function () {
       header.innerHTML = options.title;
       content.innerHTML = options.content;
       footer.innerHTML = options.btnText;
-      alert.appendChild(header);
+      options.hasOwnProperty('title') && alert.appendChild(header);
       alert.appendChild(content);
       alert.appendChild(footer);
+      alert.style.minHeight = options.hasOwnProperty('title') ? '160px' : '120px';
       document.querySelector('body').appendChild(alert);
       footer.addEventListener('click', function () {
         _this.hide();
@@ -60,7 +61,6 @@ function () {
       var _this2 = this;
 
       var option = Object.assign({
-        title: '提示',
         content: '',
         btnText: '关闭'
       }, options);
@@ -76,6 +76,7 @@ function () {
           _this2.footer.innerHTML = option.btnText;
           _this2.alert.style.display = 'block';
           setTimeout(function () {
+            _this2.alert.style.opacity = 1;
             _this2.alert.style.transform = 'translate(-50%,-50%) scale(1,1)';
           }, 0);
         }, 100);
@@ -86,6 +87,7 @@ function () {
         this.footer.innerHTML = option.btnText;
         this.alert.style.display = 'block';
         setTimeout(function () {
+          _this2.alert.style.opacity = 1;
           _this2.alert.style.transform = ' translate(-50%,-50%) scale(1,1)';
         }, 0);
       }
@@ -95,8 +97,9 @@ function () {
     value: function hide() {
       var _this3 = this;
 
-      if (this.alert) {
-        this.alert.style.transform = 'translate(-50%,-50%) scale(0,0)';
+      if (this.alert && this.alert.style.display === 'block') {
+        this.alert.style.transform = 'translate(-50%,-50%) scale(.7,.7)';
+        this.alert.style.opacity = 0;
         this.mask.hide();
         setTimeout(function () {
           _this3.alert.style.display = 'none';

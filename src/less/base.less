@@ -7,3 +7,52 @@ a{
   text-decoration: none;
   color:#333;
 }
+
+/*head*/
+.nav-bar{
+  width: 100%;
+  height: 60px;
+  background: rgba(255,255,255,.7);
+  box-shadow: 0 0 10px #000;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  padding:0 30px;
+  justify-content: space-between;
+  z-index: 100;
+  box-sizing: border-box;
+  .logo{
+    background: #06e;
+    padding:0 10px;
+    border-radius:5px;
+  }
+  .right-part{
+    display: flex;
+    align-items: center;
+    .search{
+      border-right: 1px solid #ddd;
+    }
+    .func-item{
+      padding:0 10px;
+      cursor:pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      color:#555;
+      input{
+        background: transparent;
+        border: none;
+        outline: none;
+      }
+      img{
+        width: 16px;
+        height: 16px;
+        padding:0 5px;
+      }
+      .shopping-car{
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}

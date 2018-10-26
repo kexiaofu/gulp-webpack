@@ -51,6 +51,7 @@ export default class Confirm {
 
     ok.addEventListener('click',()=>{
       typeof options.ok === 'function' ? options.ok():this.hide();
+      this.hide();
     });
 
     cancel.addEventListener('click',()=>{
@@ -79,7 +80,8 @@ export default class Confirm {
 
         this.confirm.style.display = 'block';
         setTimeout(()=>{
-          this.confirm.style.transform = 'translate(-50%,-50%) scale(1,1)'
+          this.confirm.style.transform = 'translate(-50%,-50%) scale(1,1)';
+          this.confirm.style.opacity = 1;
         },0);
 
       },100)
@@ -94,15 +96,17 @@ export default class Confirm {
 
       this.confirm.style.display = 'block';
       setTimeout(()=>{
-        this.confirm.style.transform = ' translate(-50%,-50%) scale(1,1)'
+        this.confirm.style.transform = ' translate(-50%,-50%) scale(1,1)';
+        this.confirm.style.opacity = 1;
       },0);
     }
 
   }
 
   hide() {
-    if(this.confirm) {
-      this.confirm.style.transform = 'translate(-50%,-50%) scale(0,0)';
+    if(this.confirm && this.confirm.style.display === 'block') {
+      this.confirm.style.transform = 'translate(-50%,-50%) scale(.7,.7)';
+      this.confirm.style.opacity = 0;
       this.mask.hide();
       setTimeout(()=>{
         this.confirm.style.display = 'none';

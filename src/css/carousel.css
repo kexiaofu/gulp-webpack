@@ -42,7 +42,6 @@
   left: 0;
   z-index: 11;
   cursor: pointer;
-  box-shadow: 0 0 120px rgba(0, 0, 0, 0.2) inset;
   transition: background 0.3s ease;
 }
 .left-icon img {
@@ -62,7 +61,7 @@
   right: 0;
   z-index: 11;
   cursor: pointer;
-  box-shadow: 0 0 120px rgba(0, 0, 0, 0.2) inset;
+  transition: background 0.3s ease;
 }
 .right-icon img {
   width: 50px;

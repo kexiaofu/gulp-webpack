@@ -23,9 +23,12 @@ export default class Alert {
     content.innerHTML = options.content;
     footer.innerHTML = options.btnText;
 
-    alert.appendChild(header);
+    options.hasOwnProperty('title') && alert.appendChild(header);
     alert.appendChild(content);
     alert.appendChild(footer);
+
+    alert.style.minHeight = options.hasOwnProperty('title')?'160px':'120px';
+
     document.querySelector('body').appendChild(alert);
 
     footer.addEventListener('click',()=>{
@@ -44,7 +47,6 @@ export default class Alert {
   show(options) {
 
     let option = Object.assign({
-      title:'提示',
       content:'',
       btnText:'关闭'
     }, options);
@@ -63,6 +65,7 @@ export default class Alert {
 
         this.alert.style.display = 'block';
         setTimeout(()=>{
+          this.alert.style.opacity = 1;
           this.alert.style.transform = 'translate(-50%,-50%) scale(1,1)'
         },0);
 
@@ -77,6 +80,7 @@ export default class Alert {
 
       this.alert.style.display = 'block';
       setTimeout(()=>{
+        this.alert.style.opacity = 1;
         this.alert.style.transform = ' translate(-50%,-50%) scale(1,1)'
       },0);
     }
@@ -85,8 +89,9 @@ export default class Alert {
 
   hide() {
 
-    if(this.alert) {
-      this.alert.style.transform = 'translate(-50%,-50%) scale(0,0)';
+    if(this.alert &&  this.alert.style.display === 'block') {
+      this.alert.style.transform = 'translate(-50%,-50%) scale(.7,.7)';
+      this.alert.style.opacity = 0;
       this.mask.hide();
       setTimeout(()=>{
         this.alert.style.display = 'none';

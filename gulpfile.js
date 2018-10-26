@@ -2,14 +2,19 @@ let gulp = require('gulp'),
   autofix = require('gulp-autoprefixer'),
   changed = require('gulp-changed'),
   less = require('gulp-less'),
+  cleanCss = require('gulp-clean-css'),
   plumber = require('gulp-plumber'),
   browserSync = require('browser-sync'),
   reload = browserSync.reload,
   browserify = require('browserify'),
   source = require('vinyl-source-stream'),
   buffer = require('vinyl-buffer'),
+  fileInclude = require('gulp-file-include'),
   proxy = require('http-proxy-middleware'),
-  babel = require('gulp-babel');
+  babel = require('gulp-babel'),
+  imagemin = require('gulp-imagemin'),
+  htmlmin = require('gulp-htmlmin'),
+  uglify = require('gulp-uglify');
 
 let fs = require('fs'),path = require('path');
 
@@ -75,20 +80,6 @@ gulp.task('babel',()=>{
     .pipe(gulp.dest('src/es5/'))
 });
 
-/*
-//开发时复制HTML到dev目录
-gulp.task('dev-copyHtml',()=>{
-  return gulp.src('src/html/!**!/!*.html')
-    .pipe(reload({stream: true}))
-});
-
-//开发时复制images到dev目录
-gulp.task('dev-copyImages',()=>{
-  return gulp.src('src/images/!**!/!*.*')
-    .pipe(reload({stream: true}))
-});
-*/
-
 //less -> css
 gulp.task('less',()=>{
   return gulp.src('./src/less/**/*.less')
@@ -134,6 +125,12 @@ gulp.task('server',()=>{
   })
 });
 
+gulp.task('dealwithhtml',()=>{
+  return gulp.src(['src/tempHtml/**/*.html','!src/tempHtml/head.html'])
+    .pipe(fileInclude())
+    .pipe(gulp.dest('src/html/'))
+});
+
 gulp.task('dealwithes6',()=>{
    return gulp.src('src/es6/**/*.js')
       .pipe(plumber())
@@ -170,7 +167,7 @@ gulp.task('dealwithless',()=>{
 });
 
 //开发
-gulp.task('dev', ['buildAllJs','dealwithless','server'], ()=>{
+gulp.task('dev', ['buildAllJs','dealwithhtml','dealwithless','server'], ()=>{
 
   gulp.watch('src/es6/**/*.js', ['babel']);
 
@@ -190,9 +187,64 @@ gulp.task('dev', ['buildAllJs','dealwithless','server'], ()=>{
   });
 
   gulp.watch('src/less/**/*.less',['less']);
-  gulp.watch('src/html/**/*.html').on('change',browserSync.reload);
+  gulp.watch(['src/tempHtml/**/*.html','!src/tempHtml/head.html']).on('change',(e)=>{
+    console.log(e.path,path.parse(e.path).dir.replace('tempHtml','html'));
+    gulp.src(e.path)
+      .pipe(fileInclude())
+      .pipe(gulp.dest(path.parse(e.path).dir.replace('tempHtml','html')))
+      .pipe(reload({stream: true}));
+  });
+  gulp.watch(['src/tempHtml/head.html'],()=>{
+    gulp.src(['src/tempHtml/**/*.html','!src/tempHtml/head.html'])
+      .pipe(fileInclude())
+      .pipe(gulp.dest('src/html'))
+      .pipe(reload({stream: true}));
+  });
   gulp.watch('src/images/**/*.*').on('change',browserSync.reload);
 
+});
 
 
+//生产
+gulp.task('miniCss',()=>{
+  return gulp.src('./src/css/**/*.css')
+    .pipe(cleanCss())
+    .pipe(gulp.dest('./dist/css'))
+});
+
+gulp.task('miniHtml',()=>{
+  return gulp.src('./src/html/**/*.html')
+    .pipe(htmlmin({
+      removeComments: true,//清除HTML注释
+      collapseWhitespace: true,//压缩HTML
+      collapseBooleanAttributes: true,//省略布尔属性的值 <input checked="true"/> ==> <input />
+      removeEmptyAttributes: true,//删除所有空格作属性值 <input id="" /> ==> <input />
+      removeScriptTypeAttributes: true,//删除<script>的type="text/javascript"
+      removeStyleLinkTypeAttributes: true,//删除<style>和<link>的type="text/css"
+      minifyJS: true,//压缩页面JS
+      minifyCSS: true//压缩页面CSS
+    }))
+    .pipe(gulp.dest('./dist/html'))
+
+});
+
+gulp.task('copyJs',()=>{
+  return gulp.src('./src/js/**/*.js')
+    .pipe(uglify())
+    .pipe(gulp.dest('./dist/js'))
+});
+
+gulp.task('minImages',()=>{
+  return gulp.src('./src/images/**/*.{png,jpg,jpeg,ico}')
+    .pipe(imagemin())
+    .pipe(gulp.dest('./dist/images'))
+});
+
+gulp.task('moveFont',()=>{
+  return gulp.src('./src/fonts')
+    .pipe(gulp.dest('./dist/fonts'))
+});
+
+gulp.task('build',['miniCss','miniHtml','copyJs','minImages','moveFont'],()=>{
+  console.log('build ok!')
 });

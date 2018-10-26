@@ -206,7 +206,6 @@ gulp.task('minicss',()=>{
   return gulp.src('./dev/css/**/*.css')
     .pipe(cleanCss())
     .pipe(gulp.dest('./build/css'))
-
 });
 
 gulp.task('minihtml',()=>{

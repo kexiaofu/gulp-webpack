@@ -2,9 +2,10 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  -webkit-transform: translate(-50%, -50%) scale(0, 0);
-      -ms-transform: translate(-50%, -50%) scale(0, 0);
-          transform: translate(-50%, -50%) scale(0, 0);
+  -webkit-transform: translate(-50%, -50%) scale(0.7, 0.7);
+      -ms-transform: translate(-50%, -50%) scale(0.7, 0.7);
+          transform: translate(-50%, -50%) scale(0.7, 0.7);
+  opacity: 0;
   z-index: 100;
   background: #fff;
   width: 400px;
@@ -12,16 +13,15 @@
   max-height: 300px;
   border-radius: 5px;
   overflow: hidden;
-  transition: -webkit-transform 0.5s ease;
-  transition: transform 0.5s ease;
-  transition: transform 0.5s ease, -webkit-transform 0.5s ease;
+  transition: opacity 0.3s ease, -webkit-transform 0.5s ease;
+  transition: transform 0.5s ease, opacity 0.3s ease;
+  transition: transform 0.5s ease, opacity 0.3s ease, -webkit-transform 0.5s ease;
 }
 .my-confirm .my-confirm-title {
   text-align: center;
   height: 40px;
   line-height: 40px;
   font-size: 16px;
-  border-bottom: 1px solid #ececec;
   color: #333;
 }
 .my-confirm .my-confirm-content {
@@ -36,11 +36,14 @@
           justify-content: center;
   font-size: 18px;
   min-height: 80px;
+  border-bottom: 1px solid #ececec;
+  border-top: 1px solid #ececec;
+  box-sizing: border-box;
+  margin: 0 10px;
 }
 .my-confirm .my-confirm-footer {
   position: absolute;
   bottom: 0;
-  border-top: 1px solid #ececec;
   width: 100%;
   height: 40px;
   line-height: 40px;
@@ -65,8 +68,8 @@
   content: '';
   position: absolute;
   left: 0;
-  top: 5%;
+  top: 10%;
   width: 1px;
-  height: 90%;
+  height: 80%;
   background: #ececec;
 }
