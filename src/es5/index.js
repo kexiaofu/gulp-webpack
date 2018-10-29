@@ -1,25 +1,28 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
-var _carousel = _interopRequireDefault(require("./carousel"));
-
-var _toast = _interopRequireDefault(require("./toast"));
-
-var _alert = _interopRequireDefault(require("./alert"));
-
-var _confirm = _interopRequireDefault(require("./confirm"));
-
+//import Carousel from './carousel';
+//import Toast from './toast';
+//import Alert from './alert';
+//import Confirm from './confirm';
+//import axios from 'axios';
 window.onload = function () {
   console.log(document.querySelector('.carousel-container'));
-  var carousel = new _carousel.default({
-    autoPlay: true,
-    parent: 'carousel-container',
-    images: ['../images/1.jpg', '../images/2.jpeg', '../images/3.jpeg']
+  axios.get('/api/Config/GetCarousel').then(function (res) {
+    console.log(res);
+
+    if (res.data.code === 2000) {
+      var carousel = new Carousel({
+        autoPlay: false,
+        parent: 'carousel-container',
+        images: res.data.result
+      });
+    }
+  }).catch(function (err) {
+    console.log(err);
   });
-  var confirm = new _confirm.default();
-  var alert = new _alert.default();
-  var toast = new _toast.default();
+  var confirm = new Confirm();
+  var alert = new Alert();
+  var toast = new Toast();
   setTimeout(function () {
     /*alert.show({
       content:'hello'

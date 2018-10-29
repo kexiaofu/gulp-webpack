@@ -1,16 +1,28 @@
-import Carousel from './carousel';
+//import Carousel from './carousel';
 
-import Toast from './toast';
-import Alert from './alert';
-import Confirm from './confirm';
+//import Toast from './toast';
+//import Alert from './alert';
+//import Confirm from './confirm';
+
+//import axios from 'axios';
 
 window.onload = () =>{
-  console.log(document.querySelector('.carousel-container'))
-  let carousel = new Carousel({
-    autoPlay:true,
-    parent:'carousel-container',
-    images:['../images/1.jpg','../images/2.jpeg','../images/3.jpeg']
-  });
+  console.log(document.querySelector('.carousel-container'));
+  axios.get('/api/Config/GetCarousel')
+    .then(res=>{
+      console.log(res);
+      if(res.data.code === 2000) {
+        let carousel = new Carousel({
+          autoPlay:false,
+          parent:'carousel-container',
+          images:res.data.result
+        });
+      }
+    })
+    .catch(err=>{
+      console.log(err);
+    });
+
 
   let confirm = new Confirm();
   let alert = new Alert();

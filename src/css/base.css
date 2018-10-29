@@ -69,3 +69,42 @@ a {
   width: 20px;
   height: 20px;
 }
+/*footer*/
+.footer {
+  position: absolute;
+  bottom: 0;
+  height: 100px;
+  width: 100%;
+  background: #232323;
+  color: #fff;
+  padding: 0 40px;
+  box-sizing: border-box;
+  font-size: 14px;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.footer .left-part .feedback {
+  height: 70px;
+  line-height: 70px;
+}
+.footer .left-part .feedback span:first-child {
+  color: #666;
+}
+.footer .left-part .copy-right {
+  color: #666;
+  font-size: 14px;
+}
+.footer .right-part {
+  height: 70px;
+  line-height: 70px;
+}
+.footer .right-part a {
+  color: #fff;
+}
+.footer .right-part span {
+  margin: 0 10px;
+}

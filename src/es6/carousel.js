@@ -207,12 +207,15 @@ class Carousel {
      }
   };
 
-  createImageItem(src,parent,w,h,index) {
+  createImageItem(img,parent,w,h,index) {
 
     let carousel = document.createElement('div'),
+        a = document.createElement('a'),
         image = document.createElement('img');
 
-    image.src = src;
+    image.src = img.imageUrl;
+
+    a.href = img.linkUrl;
 
     carousel.className = 'carousel-item';
 
@@ -220,7 +223,8 @@ class Carousel {
     carousel.style.height = h + 'px';
     carousel.style.visibility = index !== 0?'hidden':'visible';
 
-    carousel.appendChild(image);
+    a.appendChild(image);
+    carousel.appendChild(a);
 
     parent.appendChild(carousel);
 

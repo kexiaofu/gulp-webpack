@@ -14,7 +14,14 @@ let gulp = require('gulp'),
   babel = require('gulp-babel'),
   imagemin = require('gulp-imagemin'),
   htmlmin = require('gulp-htmlmin'),
-  uglify = require('gulp-uglify');
+  uglify = require('gulp-uglify'),
+  clean = require('gulp-clean'),
+  rev = require('gulp-rev'),
+  revReplace = require('gulp-rev-replace'),
+  zip = require('gulp-zip'),
+  gulpSequence = require('gulp-sequence');
+
+const version = 'v1.0.0';
 
 let fs = require('fs'),path = require('path');
 
@@ -106,12 +113,13 @@ gulp.task('less',()=>{
 });
 
 let proxyApi = proxy('/api',{
-  target:'http://192.169.2.157:56790',
+  target:'http://192.168.2.157:52659',
   changeOrigin:true
 });
 
 //开启服务
 gulp.task('server',()=>{
+
   browserSync.init({
     server: {
       baseDir:'./',
@@ -126,7 +134,7 @@ gulp.task('server',()=>{
 });
 
 gulp.task('dealwithhtml',()=>{
-  return gulp.src(['src/tempHtml/**/*.html','!src/tempHtml/head.html'])
+  return gulp.src(['src/tempHtml/**/*.html','!src/tempHtml/head.html','!src/tempHtml/footer.html'])
     .pipe(fileInclude())
     .pipe(gulp.dest('src/html/'))
 });
@@ -187,15 +195,15 @@ gulp.task('dev', ['buildAllJs','dealwithhtml','dealwithless','server'], ()=>{
   });
 
   gulp.watch('src/less/**/*.less',['less']);
-  gulp.watch(['src/tempHtml/**/*.html','!src/tempHtml/head.html']).on('change',(e)=>{
+  gulp.watch(['src/tempHtml/**/*.html','!src/tempHtml/head.html','!src/tempHtml/footer.html']).on('change',(e)=>{
     console.log(e.path,path.parse(e.path).dir.replace('tempHtml','html'));
     gulp.src(e.path)
       .pipe(fileInclude())
       .pipe(gulp.dest(path.parse(e.path).dir.replace('tempHtml','html')))
       .pipe(reload({stream: true}));
   });
-  gulp.watch(['src/tempHtml/head.html'],()=>{
-    gulp.src(['src/tempHtml/**/*.html','!src/tempHtml/head.html'])
+  gulp.watch(['src/tempHtml/head.html','src/tempHtml/footer.html'],()=>{
+    gulp.src(['src/tempHtml/**/*.html','!src/tempHtml/head.html','!src/tempHtml/footer.html'])
       .pipe(fileInclude())
       .pipe(gulp.dest('src/html'))
       .pipe(reload({stream: true}));
@@ -204,16 +212,83 @@ gulp.task('dev', ['buildAllJs','dealwithhtml','dealwithless','server'], ()=>{
 
 });
 
-
 //生产
+//clean
+
+gulp.task('clean-dist',()=>{
+  return gulp.src(['./dist/*'],{read:false})
+    .pipe(clean())
+
+});
+
+//copy file
+
+gulp.task('copy-to-files',()=>{
+  return gulp.src([
+    './src/**/**/**/*.*',
+    '!./src/es6/**/**/*.*',
+    '!./src/es5/**/**/*.*',
+    '!./src/less/**/**/*.*',
+    '!./src/css/**/**/*.*',
+    '!./src/js/**/**/*.*',
+    '!./src/tempHtml/**/**/*.*'
+  ])
+    .pipe(gulp.dest('./dist/files'));
+
+});
+
+//rev
+gulp.task('rev-assets',()=>{
+  return gulp.src([
+    './src/**/**/**/*.*',
+    '!./src/html/**/**/*.*',
+    '!./src/tempHtml/**/**/*.*',
+    '!./src/fonts/**/**/*.*',
+    '!./src/es6/**/**/*.js',
+    '!./src/es5/**/**/*.js',
+    '!./src/less/**/**/*.less',
+  ])
+    .pipe(rev())
+    .pipe(gulp.dest('./dist/files/'))
+    .pipe(rev.manifest())
+    .pipe(gulp.dest('./dist/files/'))
+});
+
+gulp.task('rev-replace',()=>{
+  let manifest = gulp.src('./dist/files/rev-manifest.json');
+  return gulp.src(['./dist/files/**/**/*.*'])
+    .pipe(revReplace({manifest:manifest}))
+    .pipe(gulp.dest('./dist/revision'))
+});
+
+
+gulp.task('copy-to-rev',()=>{
+  gulp.src('./dist/files/html/**/*.html')
+    .pipe(gulp.dest('./dist/revision/html'));
+
+  gulp.src('./dist/files/css/**/*.css')
+    .pipe(gulp.dest('./dist/revision/css'));
+
+  gulp.src('./dist/files/js/**/*.js')
+    .pipe(gulp.dest('./dist/revision/js'));
+
+  gulp.src('./dist/files/images/**/*.*')
+    .pipe(gulp.dest('./dist/revision/images'));
+
+  gulp.src('./dist/files/fonts/*.*')
+    .pipe(gulp.dest('./dist/revision/fonts'));
+});
+
+
+//mini
 gulp.task('miniCss',()=>{
-  return gulp.src('./src/css/**/*.css')
+  return gulp.src('./dist/revision/css/**/*.css')
     .pipe(cleanCss())
-    .pipe(gulp.dest('./dist/css'))
+    .pipe(gulp.dest('./dist/target/css'))
 });
 
 gulp.task('miniHtml',()=>{
-  return gulp.src('./src/html/**/*.html')
+  return gulp.src('./dist/revision/html/**/*.html')
     .pipe(htmlmin({
       removeComments: true,//清除HTML注释
       collapseWhitespace: true,//压缩HTML
@@ -224,27 +299,38 @@ gulp.task('miniHtml',()=>{
       minifyJS: true,//压缩页面JS
       minifyCSS: true//压缩页面CSS
     }))
-    .pipe(gulp.dest('./dist/html'))
+    .pipe(gulp.dest('./dist/target/html'))
 
 });
 
-gulp.task('copyJs',()=>{
-  return gulp.src('./src/js/**/*.js')
+gulp.task('miniJs',()=>{
+  return gulp.src('./dist/revision/js/**/*.js')
     .pipe(uglify())
-    .pipe(gulp.dest('./dist/js'))
+    .pipe(gulp.dest('./dist/target/js'))
 });
 
-gulp.task('minImages',()=>{
-  return gulp.src('./src/images/**/*.{png,jpg,jpeg,ico}')
+gulp.task('miniImages',()=>{
+  return gulp.src('./dist/revision/images/**/*.{png,jpg,jpeg,ico}')
     .pipe(imagemin())
-    .pipe(gulp.dest('./dist/images'))
+    .pipe(gulp.dest('./dist/target/images'))
 });
 
 gulp.task('moveFont',()=>{
-  return gulp.src('./src/fonts')
-    .pipe(gulp.dest('./dist/fonts'))
+  return gulp.src('./dist/revision/fonts')
+    .pipe(gulp.dest('./dist/target/fonts'))
 });
 
-gulp.task('build',['miniCss','miniHtml','copyJs','minImages','moveFont'],()=>{
-  console.log('build ok!')
+gulp.task('zip',()=>{
+  let D = new Date();
+  return gulp.src('./dist/target/**/**/**/*.*')
+    .pipe(zip(`dist-${version}-${''+D.getFullYear()+D.getMonth()+D.getDate()+D.getHours()+D.getMinutes()}.zip`))
+    .pipe(gulp.dest('./dist'))
 });
+
+gulp.task('build',gulpSequence('clean-dist','copy-to-files','rev-assets','rev-replace',['miniCss','miniJs','miniImages','miniHtml','moveFont'],'zip'));
+
+
+/*gulp.task('build',['miniCss','miniHtml','copyJs','minImages','moveFont'],()=>{
+  console.log('build ok!')
+});*/
+
