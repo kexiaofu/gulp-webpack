@@ -3,27 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="../css/base.css">
-    <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="../css/carousel.css">
-    <link href="../css/iconfont.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common/base.css">
+    <link rel="stylesheet" href="../css/pages/index.css">
+    <link rel="stylesheet" href="../css/common/carousel.css">
+    <link href="../css/common/iconfont.css" rel="stylesheet">
 </head>
 <body>
-@@include('./head.html')
+@@include('./common/head.html')
 <div id="index">
     <div class="carousel-container"></div>
 
-    <div class="production-list">
-        <a href="./home.html">home</a>
-    </div>
+    <div class="production-list"></div>
+
 </div>
-@@include('./footer.html')
-<script src="../../node_modules/axios/dist/axios.js"></script>
-<script src="../js/carousel.js"></script>
-<script src="../js/confirm.js"></script>
-<script src="../js/alert.js"></script>
-<script src="../js/toast.js"></script>
-<script src="../js/template.js"></script>
-<script src="../js/index.js"></script>
+<script id="production-list" type="text/html">
+    <p class="b-title">明星产品</p>
+    <div class="product-container">
+        {{each data value i}}
+        <div class="production-item">
+            <div class="product-img">
+                <a href={{"./product.html?prodictId="+value.productId}}>
+                    <img src={{value.introductImage}} alt="">
+                </a>
+            </div>
+            <div class="product-content">
+                <p class="product-name">{{ value.name }}</p>
+                <p>
+                    <span class="current-price">￥{{ value.currentPrice }}</span>
+                    <span class="original-price">{{ value.originalPrice }}</span>
+                </p>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    <a href="./product-list.html" class="get-more-product">
+        更多产品
+        <i class="iconfont icon-left"></i>
+    </a>
+</script>
+@@include('./common/backToTop.html')
+@@include('./common/footer.html')
+<script src="../js/app/index.js"></script>
 </body>
 </html>

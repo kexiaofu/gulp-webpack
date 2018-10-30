@@ -25,19 +25,6 @@ const version = 'v1.0.0';
 
 let fs = require('fs'),path = require('path');
 
-let mkdirFunc =  (path,cb) =>{
-  fs.readdir(path,(err,files)=>{
-    if(err) {
-      fs.mkdir(path,(merr)=>{
-        if( merr ) return console.log(merr);
-        console.log('create dir success --',path);
-        typeof cb === 'function' && cb();
-      })
-    }
-    typeof cb === 'function' && cb();
-  })
-};
-
 let fileDisplay = (filePath) => {
   //根据文件路径读取文件，返回文件列表
   fs.readdir(filePath,function(err,files){
@@ -113,7 +100,7 @@ gulp.task('less',()=>{
 });
 
 let proxyApi = proxy('/api',{
-  target:'http://192.168.2.157:52659',
+  target:'http://192.168.2.157:88',
   changeOrigin:true
 });
 
@@ -134,7 +121,7 @@ gulp.task('server',()=>{
 });
 
 gulp.task('dealwithhtml',()=>{
-  return gulp.src(['src/tempHtml/**/*.html','!src/tempHtml/head.html','!src/tempHtml/footer.html'])
+  return gulp.src(['src/tempHtml/**/*.html','!src/tempHtml/common/**/*.html'])
     .pipe(fileInclude())
     .pipe(gulp.dest('src/html/'))
 });
@@ -174,42 +161,49 @@ gulp.task('dealwithless',()=>{
     .pipe(gulp.dest('./src/css'));
 });
 
+gulp.task('clean-dev-files',()=>{
+  return gulp.src(['./src/es5/**/**/*.*','./src/js/**/**/*.*','./src/css/**/**/*.*','./src/html/**/**/*.*'])
+    .pipe(clean())
+});
+
 //开发
-gulp.task('dev', ['buildAllJs','dealwithhtml','dealwithless','server'], ()=>{
+gulp.task('dev', ()=>{
+  gulpSequence('clean-dev-files',['buildAllJs','dealwithhtml','dealwithless'],'server', ()=>{
 
-  gulp.watch('src/es6/**/*.js', ['babel']);
+    gulp.watch('src/es6/**/**/*.js', ['babel']);
 
-  gulp.watch('src/es5/**/*.js',(e)=>{
-    let realPath = e.path.split(path.delimiter)[0],
-      jsPath = path.win32.basename(realPath) ,
-      destPath = path.parse(realPath).dir.replace('es5','js');
-    console.log(realPath,jsPath,destPath,'watch');
-    if(e.type === 'changed' || e.type === 'added') {
-      browserify(e.path)
-        .bundle()
-        .pipe(source(jsPath))
-        .pipe(buffer())
-        .pipe(gulp.dest(destPath))
+    gulp.watch('src/es5/**/**/*.js',(e)=>{
+      let realPath = e.path.split(path.delimiter)[0],
+        jsPath = path.win32.basename(realPath) ,
+        destPath = path.parse(realPath).dir.replace('es5','js');
+      console.log(realPath,jsPath,destPath,'watch');
+      if(e.type === 'changed' || e.type === 'added') {
+        browserify(e.path)
+          .bundle()
+          .pipe(source(jsPath))
+          .pipe(buffer())
+          .pipe(gulp.dest(destPath))
+          .pipe(reload({stream: true}));
+      }
+    });
+
+    gulp.watch('src/less/**/*.less',['less']);
+    gulp.watch(['src/tempHtml/**/*.html','!src/tempHtml/common/*.html']).on('change',(e)=>{
+      console.log(e.path,path.parse(e.path).dir.replace('tempHtml','html'));
+      gulp.src(e.path)
+        .pipe(fileInclude())
+        .pipe(gulp.dest(path.parse(e.path).dir.replace('tempHtml','html')))
         .pipe(reload({stream: true}));
-    }
-  });
+    });
+    gulp.watch('src/tempHtml/common/*.html',()=>{
+      gulp.src(['src/tempHtml/**/*.html','!src/tempHtml/common/*.html'])
+        .pipe(fileInclude())
+        .pipe(gulp.dest('src/html'))
+        .pipe(reload({stream: true}));
+    });
+    gulp.watch('src/images/**/*.*').on('change',browserSync.reload);
 
-  gulp.watch('src/less/**/*.less',['less']);
-  gulp.watch(['src/tempHtml/**/*.html','!src/tempHtml/head.html','!src/tempHtml/footer.html']).on('change',(e)=>{
-    console.log(e.path,path.parse(e.path).dir.replace('tempHtml','html'));
-    gulp.src(e.path)
-      .pipe(fileInclude())
-      .pipe(gulp.dest(path.parse(e.path).dir.replace('tempHtml','html')))
-      .pipe(reload({stream: true}));
-  });
-  gulp.watch(['src/tempHtml/head.html','src/tempHtml/footer.html'],()=>{
-    gulp.src(['src/tempHtml/**/*.html','!src/tempHtml/head.html','!src/tempHtml/footer.html'])
-      .pipe(fileInclude())
-      .pipe(gulp.dest('src/html'))
-      .pipe(reload({stream: true}));
-  });
-  gulp.watch('src/images/**/*.*').on('change',browserSync.reload);
-
+  })
 });
 
 //生产
@@ -327,7 +321,7 @@ gulp.task('zip',()=>{
     .pipe(gulp.dest('./dist'))
 });
 
-gulp.task('build',gulpSequence('clean-dist','copy-to-files','rev-assets','rev-replace',['miniCss','miniJs','miniImages','miniHtml','moveFont'],'zip'));
+gulp.task('build', gulpSequence('clean-dist','copy-to-files','rev-assets','rev-replace',['miniCss','miniJs','miniImages','miniHtml','moveFont'],'zip'));
 
 
 /*gulp.task('build',['miniCss','miniHtml','copyJs','minImages','moveFont'],()=>{

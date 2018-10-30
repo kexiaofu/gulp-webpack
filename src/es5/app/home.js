@@ -2,7 +2,7 @@
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _template = _interopRequireDefault(require("./template"));
+var _template = _interopRequireDefault(require("../common/template"));
 
 var data = {
   title: '基本例子12345',

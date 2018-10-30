@@ -1,6 +1,4 @@
-import template from './template';
-
-
+import template from '../common/template';
 var data = {
   title: '基本例子12345',
   isAdmin: true,

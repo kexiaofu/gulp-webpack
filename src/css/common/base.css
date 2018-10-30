@@ -1,0 +1,192 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  color: #333;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+a {
+  text-decoration: none;
+  color: #333;
+}
+p {
+  margin: 0;
+  padding: 0;
+}
+/*head*/
+.nav-bar {
+  width: 100%;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 10px #999;
+  position: fixed;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0 30px;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  z-index: 100;
+  box-sizing: border-box;
+}
+.nav-bar .logo {
+  background: #06e;
+  padding: 0 10px;
+  border-radius: 5px;
+}
+.nav-bar .right-part {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.nav-bar .right-part .search {
+  border-right: 1px solid #ddd;
+}
+.nav-bar .right-part .func-item {
+  padding: 0 10px;
+  cursor: pointer;
+  font-size: 14px;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: #555;
+  transition: color 0.5s ease;
+}
+.nav-bar .right-part .func-item .to-search {
+  padding: 0 0 0 5px;
+}
+.nav-bar .right-part .func-item input {
+  background: transparent;
+  border: none;
+  outline: none;
+}
+.nav-bar .right-part .func-item img {
+  width: 16px;
+  height: 16px;
+  padding: 0 5px;
+}
+.nav-bar .right-part .func-item .shopping-car {
+  font-size: 20px;
+}
+.nav-bar .right-part .hover-blue:hover {
+  color: #00A6DE;
+}
+.login {
+  width: 600px;
+  height: 360px;
+  background: rgba(255, 255, 255, 0.9);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  box-shadow: 0 0 20px #666;
+  z-index: 110;
+}
+/*footer*/
+.footer {
+  position: absolute;
+  height: 100px;
+  width: 100%;
+  background: #232323;
+  color: #fff;
+  padding: 0 40px;
+  box-sizing: border-box;
+  font-size: 14px;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.footer .left-part .feedback {
+  height: 70px;
+  line-height: 70px;
+}
+.footer .left-part .feedback span:first-child {
+  color: #666;
+}
+.footer .left-part .copy-right {
+  color: #666;
+  font-size: 14px;
+}
+.footer .right-part {
+  height: 70px;
+  line-height: 70px;
+}
+.footer .right-part a {
+  color: #fff;
+}
+.footer .right-part span {
+  margin: 0 10px;
+}
+/*back-to-top*/
+.back-to-top {
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  position: fixed;
+  bottom: 110px;
+  right: 10px;
+  text-align: center;
+  cursor: pointer;
+  -webkit-transform: scale(-1);
+      -ms-transform: scale(-1);
+          transform: scale(-1);
+}
+.back-to-top .icon-drop-down {
+  font-size: 42px;
+}
+.icon-out-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border-radius: 100%;
+  opacity: 1;
+  transition: background 0.3s ease, opacity 0.3s ease, -webkit-transform 0.3s ease;
+  transition: background 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+  transition: background 0.3s ease, opacity 0.3s ease, transform 0.3s ease, -webkit-transform 0.3s ease;
+  -webkit-transform: scale(0, 0);
+      -ms-transform: scale(0, 0);
+          transform: scale(0, 0);
+}
+.icon-in-container {
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  margin: 15%;
+  background: transparent;
+  border-radius: 100%;
+  transition: background 0.3s ease, -webkit-transform 0.3s ease;
+  transition: transform 0.3s ease, background 0.3s ease;
+  transition: transform 0.3s ease, background 0.3s ease, -webkit-transform 0.3s ease;
+  -webkit-transform: scale(0, 0);
+      -ms-transform: scale(0, 0);
+          transform: scale(0, 0);
+}
+.back-to-top:hover > .icon-out-container {
+  -webkit-transform: scale(1, 1);
+      -ms-transform: scale(1, 1);
+          transform: scale(1, 1);
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+}
+.back-to-top:hover > .icon-in-container {
+  -webkit-transform: scale(1, 1);
+      -ms-transform: scale(1, 1);
+          transform: scale(1, 1);
+  background: rgba(0, 0, 0, 0.3);
+}

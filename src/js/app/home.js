@@ -215,7 +215,7 @@ process.umask = function() { return 0; };
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _template = _interopRequireDefault(require("./template"));
+var _template = _interopRequireDefault(require("../common/template"));
 
 var data = {
   title: '基本例子12345',
@@ -224,7 +224,7 @@ var data = {
 };
 var html = (0, _template.default)('test', data);
 document.getElementById('home').innerHTML = html;
-},{"./template":5,"@babel/runtime/helpers/interopRequireDefault":1}],5:[function(require,module,exports){
+},{"../common/template":5,"@babel/runtime/helpers/interopRequireDefault":1}],5:[function(require,module,exports){
 (function (process){
 "use strict";
 

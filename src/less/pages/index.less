@@ -1,0 +1,100 @@
+//@import 'base.less';
+//@import 'carousel.less';
+@import '../common/mask.less';
+@import '../common/alert.less';
+@import '../common/confirm.less';
+@import '../common/toast.less';
+
+@hover-color:#00A6DE;
+
+#index{
+  .carousel-container{
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+    height: 514px;
+    margin:60px 0 0 0;
+  }
+  .production-list{
+    //background: rgba(0,0,0,.5);
+    width: 1050px;
+    margin:0 auto 10px auto;
+    overflow: hidden;
+    padding:614px 10px 10px 10px;
+    .b-title{
+      padding:0 0 20px 0;
+      margin:0;
+      text-align: center;
+      font-size: 28px;
+    }
+    .product-container {
+      overflow: hidden;
+      padding:20px 0;
+    }
+    .production-item{
+      width: 327px;
+      height: 400px;
+      float:left;
+      margin:0 10px 20px 10px;
+      box-sizing: border-box;
+      transition:box-shadow .3s ease, transform .3s ease;
+      .product-img{
+        overflow: hidden;
+      }
+      img{
+        width: 327px;
+        height: 327px;
+        background: #ececec;
+        box-sizing: border-box;
+      }
+      .product-content{
+        text-align: center;
+        font-size:15px;
+        padding:10px 0;
+        .pruduct-name{
+          padding:0 0 5px 0;
+          transition:color .5s ease;
+        }
+        .current-price{
+          color:#f00;
+        }
+        .original-price{
+          color:#999;
+          text-decoration: line-through;
+          padding-left:5px;
+          font-size: 13px;
+        }
+      }
+    }
+    .production-item:hover{
+      box-shadow: 0 0 20px #999;
+      transform: translate(0 , -5px);
+    }
+    .production-item:hover .product-name{
+      color:@hover-color;
+    }
+    .get-more-product{
+      display: block;
+      width: 100%;
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
+      cursor: pointer;
+      transition:color .5s ease,background .5s ease;
+      .icon-left{
+        position: absolute;
+        transform:translate(-10px,0) scale(-1);
+        opacity:0;
+        transition:transform .5s ease,opacity .5s ease;
+      }
+    }
+    .get-more-product:hover{
+      color:@hover-color;
+      background: #eee;
+    }
+    .get-more-product:hover>.icon-left{
+      opacity:1;
+      transform:translate(5px,0) scale(-1);
+    }
+  }
+}

@@ -1,0 +1,12 @@
+<div class="back-to-top" onclick="backToTop()">
+    <div class="icon-out-container"></div>
+    <div class="icon-in-container"></div>
+    <i class="iconfont icon-drop-down"></i>
+</div>
+
+<script>
+    var backToTop = function() {
+      console.log(document.querySelector('html').scrollTop);
+      document.querySelector('html').scrollTo(0,0);
+    };
+</script>

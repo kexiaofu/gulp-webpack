@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="../css/base.css">
-    <link rel="stylesheet" href="../css/index.css">
-    <link rel="stylesheet" href="../css/carousel.css">
-    <link href="../css/iconfont.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common/base.css">
+    <link rel="stylesheet" href="../css/pages/index.css">
+    <link rel="stylesheet" href="../css/common/carousel.css">
+    <link href="../css/common/iconfont.css" rel="stylesheet">
 </head>
 <body>
 <div class="nav-bar">
@@ -23,41 +23,107 @@
             <span class="to-search" onclick="toSearch()">搜索</span>
             <i class="iconfont icon-close" style="display: none;" onclick="toClose()"></i>
         </div>
-        <div class="func-item">登录</div>
-        <div class="func-item">注册</div>
+        <div class="func-item hover-blue">登录</div>
+        <div class="func-item hover-blue">注册</div>
         <div class="func-item">
-            <img src="../images/icon/shopping-car.png" alt="" class="shopping-car">
+            <i class="iconfont icon-gouwuche shopping-car"></i>
         </div>
     </div>
 </div>
 
-<script>
-    var toSearch = function() {
-      let searchInput = document.querySelector('.search-input'),
-          toSearch = document.querySelector('.to-search'),
-          close = document.querySelector('.icon-close');
-      toSearch.style.display = 'none';
-      searchInput.style.display = 'block';
-      close.style.display = 'block';
-    };
+<div class="login">
+    <div class="login-input">
+        <input type="text" placeholder="请输入您的账号">
+    </div>
+    <div class="login-input">
+        <input type="text" placeholder="请输入您的密码">
+    </div>
+    <div class="operation">
+        <div class="submit">登录</div>
+        <div class="sign-up">注册</div>
+    </div>
+</div>
 
-    var toClose = function() {
-      let searchInput = document.querySelector('.search-input'),
-        toSearch = document.querySelector('.to-search'),
-        close = document.querySelector('.icon-close');
-      toSearch.style.display = 'block';
-      searchInput.style.display = 'none';
-      close.style.display = 'none';
+
+<script>
+
+  var dispatchSomrthing = function (name) {
+    if (window.dispatchEvent) {
+      window.dispatchEvent(name);
+    } else {
+      window.fireEvent(name);
     }
+  };
+
+  var toSearch = function () {
+    let searchInput = document.querySelector('.search-input'),
+      toSearch = document.querySelector('.to-search'),
+      close = document.querySelector('.icon-close');
+    toSearch.style.display = 'none';
+    searchInput.style.display = 'block';
+    close.style.display = 'block';
+    searchInput.focus();
+    var showSearchBox = new CustomEvent('show-search-box');
+    dispatchSomrthing(showSearchBox);
+  };
+
+  var toClose = function () {
+    let searchInput = document.querySelector('.search-input'),
+      toSearch = document.querySelector('.to-search'),
+      close = document.querySelector('.icon-close');
+    toSearch.style.display = 'block';
+    searchInput.style.display = 'none';
+    close.style.display = 'none';
+    var hideSearchBox = new CustomEvent('hide-search-box');
+    dispatchSomrthing(hideSearchBox);
+
+  };
+
 
 </script>
 <div id="index">
     <div class="carousel-container"></div>
 
-    <div class="production-list">
-        <a href="./home.html">home</a>
-    </div>
+    <div class="production-list"></div>
+
 </div>
+<script id="production-list" type="text/html">
+    <p class="b-title">明星产品</p>
+    <div class="product-container">
+        {{each data value i}}
+        <div class="production-item">
+            <div class="product-img">
+                <a href={{"./product.html?prodictId="+value.productId}}>
+                    <img src={{value.introductImage}} alt="">
+                </a>
+            </div>
+            <div class="product-content">
+                <p class="product-name">{{ value.name }}</p>
+                <p>
+                    <span class="current-price">￥{{ value.currentPrice }}</span>
+                    <span class="original-price">{{ value.originalPrice }}</span>
+                </p>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    <a href="./product-list.html" class="get-more-product">
+        更多产品
+        <i class="iconfont icon-left"></i>
+    </a>
+</script>
+<div class="back-to-top" onclick="backToTop()">
+    <div class="icon-out-container"></div>
+    <div class="icon-in-container"></div>
+    <i class="iconfont icon-drop-down"></i>
+</div>
+
+<script>
+    var backToTop = function() {
+      console.log(document.querySelector('html').scrollTop);
+      document.querySelector('html').scrollTo(0,0);
+    };
+</script>
 <div class="footer">
     <div class="left-part">
         <div class="feedback">
@@ -79,12 +145,6 @@
         </div>
     </div>
 </div>
-<script src="../../node_modules/axios/dist/axios.js"></script>
-<script src="../js/carousel.js"></script>
-<script src="../js/confirm.js"></script>
-<script src="../js/alert.js"></script>
-<script src="../js/toast.js"></script>
-<script src="../js/template.js"></script>
-<script src="../js/index.js"></script>
+<script src="../js/app/index.js"></script>
 </body>
 </html>
