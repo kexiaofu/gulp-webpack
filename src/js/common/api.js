@@ -2446,7 +2446,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getProductionList = exports.getCarousel = void 0;
+exports.getProductClassify = exports.getAllProductList = exports.toLogin = exports.getProductionList = exports.getCarousel = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -2461,25 +2461,36 @@ var apiRequire =
 function () {
   var _ref = (0, _asyncToGenerator2.default)(
   /*#__PURE__*/
-  _regenerator.default.mark(function _callee(name, url) {
-    var storageTime;
+  _regenerator.default.mark(function _callee(name, url, method, data) {
+    var storage,
+        storageTime,
+        _args = arguments;
     return _regenerator.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
+            storage = _args.length > 4 && _args[4] !== undefined ? _args[4] : true;
             storageTime = new Date().getTime();
 
-            if (!(window.sessionStorage.getItem(name) !== null && storageTime - window.sessionStorage.getItem(name + '-time') < period)) {
-              _context.next = 5;
+            if (!(storage && window.sessionStorage.getItem(name) !== null && storageTime - window.sessionStorage.getItem(name + '-time') < period)) {
+              _context.next = 6;
               break;
             }
 
             return _context.abrupt("return", JSON.parse(window.sessionStorage.getItem(name)));
 
-          case 5:
+          case 6:
             console.log("require ".concat(name, " again"));
-            _context.next = 8;
-            return _axios.default.get(url).then(function (res) {
+
+            if (!(method === undefined || method === null)) {
+              _context.next = 13;
+              break;
+            }
+
+            _context.next = 10;
+            return _axios.default.get(url, {
+              params: data
+            }).then(function (res) {
               if (res.data.code === 2000) {
                 window.sessionStorage.setItem(name, JSON.stringify(res.data.result));
                 window.sessionStorage.setItem(name + '-time', storageTime);
@@ -2491,10 +2502,27 @@ function () {
               alert(err);
             });
 
-          case 8:
+          case 10:
             return _context.abrupt("return", _context.sent);
 
-          case 9:
+          case 13:
+            _context.next = 15;
+            return _axios.default.post(url, data).then(function (res) {
+              if (res.data.code === 2000) {
+                window.sessionStorage.setItem(name, JSON.stringify(res.data.result));
+                window.sessionStorage.setItem(name + '-time', storageTime);
+                return res.data.result;
+              } else {
+                alert(res.data.msg);
+              }
+            }).catch(function (err) {
+              alert(err);
+            });
+
+          case 15:
+            return _context.abrupt("return", _context.sent);
+
+          case 16:
           case "end":
             return _context.stop();
         }
@@ -2502,7 +2530,7 @@ function () {
     }, _callee, this);
   }));
 
-  return function apiRequire(_x, _x2) {
+  return function apiRequire(_x, _x2, _x3, _x4) {
     return _ref.apply(this, arguments);
   };
 }();
@@ -2568,4 +2596,98 @@ function () {
 }();
 
 exports.getProductionList = getProductionList;
+
+var toLogin =
+/*#__PURE__*/
+function () {
+  var _ref4 = (0, _asyncToGenerator2.default)(
+  /*#__PURE__*/
+  _regenerator.default.mark(function _callee4(account) {
+    return _regenerator.default.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            _context4.next = 2;
+            return apiRequire('account', '/api/account/login', null, account);
+
+          case 2:
+            return _context4.abrupt("return", _context4.sent);
+
+          case 3:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4, this);
+  }));
+
+  return function toLogin(_x5) {
+    return _ref4.apply(this, arguments);
+  };
+}();
+
+exports.toLogin = toLogin;
+
+var getAllProductList =
+/*#__PURE__*/
+function () {
+  var _ref5 = (0, _asyncToGenerator2.default)(
+  /*#__PURE__*/
+  _regenerator.default.mark(function _callee5(data) {
+    return _regenerator.default.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            _context5.next = 2;
+            return apiRequire('getAllProductList', '/api/Product/getproductList', null, data, false);
+
+          case 2:
+            return _context5.abrupt("return", _context5.sent);
+
+          case 3:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5, this);
+  }));
+
+  return function getAllProductList(_x6) {
+    return _ref5.apply(this, arguments);
+  };
+}();
+
+exports.getAllProductList = getAllProductList;
+
+var getProductClassify =
+/*#__PURE__*/
+function () {
+  var _ref6 = (0, _asyncToGenerator2.default)(
+  /*#__PURE__*/
+  _regenerator.default.mark(function _callee6() {
+    return _regenerator.default.wrap(function _callee6$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            _context6.next = 2;
+            return apiRequire('getProductClassify', '/api/Product/GetGroup', null);
+
+          case 2:
+            return _context6.abrupt("return", _context6.sent);
+
+          case 3:
+          case "end":
+            return _context6.stop();
+        }
+      }
+    }, _callee6, this);
+  }));
+
+  return function getProductClassify() {
+    return _ref6.apply(this, arguments);
+  };
+}(); //getProductClassify,/api/Product/GetGroup
+
+
+exports.getProductClassify = getProductClassify;
 },{"@babel/runtime/helpers/asyncToGenerator":1,"@babel/runtime/helpers/interopRequireDefault":2,"@babel/runtime/regenerator":3,"axios":4}]},{},[33]);

@@ -1,0 +1,26 @@
+<div class="classify">
+    <div class="classify-container"></div>
+</div>
+
+<script id="classify-view" type="text/html">
+    <ul>
+        {{each data val i}}
+        <a href={{ "./product-list.html#"+val.id }}>
+            <li>
+                <i><img src="" alt=""></i>
+                <span>{{val.name}}</span>
+                <div class="sec-classify-container">
+                    {{each val.children sec si}}
+                    <a href={{ "./product-list.html#"+sec.id }} >
+                        <div class="sec-classify-item">{{ sec.name }}</div>
+                    </a>
+                    {{/each}}
+                </div>
+            </li>
+        </a>
+        {{/each}}
+    </ul>
+
+</script>
+
+<script src="../js/app/classify.js"></script>

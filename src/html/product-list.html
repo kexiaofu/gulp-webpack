@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>百成墙纸商城</title>
+    <title>产品列表</title>
     <link rel="stylesheet" href="../css/common/base.css">
-    <link rel="stylesheet" href="../css/pages/index.css">
-    <link rel="stylesheet" href="../css/common/carousel.css">
     <link href="../css/common/iconfont.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/pages/product-list.css">
+
+
 </head>
 <body>
 <div class="nav-bar">
@@ -59,37 +60,38 @@
 
 <script src="../js/app/head.js"></script>
 
-<div id="index" class="container">
-    <div class="carousel-container"></div>
-
-    <div class="production-list"></div>
-
+<div class="classify">
+    <div class="classify-container"></div>
 </div>
-<script id="production-list" type="text/html">
-    <p class="b-title">明星产品</p>
-    <div class="product-container">
-        {{each data value i}}
-        <div class="production-item">
-            <div class="product-img">
-                <a href={{"./product.html?prodictId="+value.productId}}>
-                    <img src="" alt="" data-origin-src={{value.introductImage}} data-is-load="false" class="lazy-load-img">
-                </a>
-            </div>
-            <div class="product-content">
-                <p class="product-name">{{ value.name }}</p>
-                <p>
-                    <span class="current-price">￥{{ value.currentPrice }}</span>
-                    <span class="original-price">{{ value.originalPrice }}</span>
-                </p>
-            </div>
-        </div>
+
+<script id="classify-view" type="text/html">
+    <ul>
+        {{each data val i}}
+        <a href={{ "./product-list.html#"+val.id }}>
+            <li>
+                <i><img src="" alt=""></i>
+                <span>{{val.name}}</span>
+                <div class="sec-classify-container">
+                    {{each val.children sec si}}
+                    <a href={{ "./product-list.html#"+sec.id }} >
+                        <div class="sec-classify-item">{{ sec.name }}</div>
+                    </a>
+                    {{/each}}
+                </div>
+            </li>
+        </a>
         {{/each}}
-    </div>
-    <a href="./product-list.html" class="get-more-product">
-        更多产品
-        <i class="iconfont icon-left"></i>
-    </a>
+    </ul>
+
 </script>
+
+<script src="../js/app/classify.js"></script>
+
+    <div id="product-list" class="container product-list">
+        <div class="production-list">
+
+        </div>
+    </div>
 <div class="back-to-top" onclick="backToTop()">
     <div class="icon-out-container"></div>
     <div class="icon-in-container"></div>
@@ -123,6 +125,22 @@
         </div>
     </div>
 </div>
-<script src="../js/app/index.js"></script>
+    <script id="production-list" type="text/html">
+        <div class="product-container">
+            {{each data value i}}
+            <div class="production-item">
+                <div class="product-img">
+                    <a href={{"./product.html?prodictId="+value.productId}}>
+                        <img src="" alt="" data-origin-src={{value.introductImage}} data-is-load="false" class="lazy-load-img">
+                    </a>
+                </div>
+                <div class="product-content">
+                    <p class="product-name">{{ value.name }}</p>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </script>
+    <script src="../js/app/product-list.js"></script>
 </body>
 </html>

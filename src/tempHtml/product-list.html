@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>产品列表</title>
+    <link rel="stylesheet" href="../css/common/base.css">
+    <link href="../css/common/iconfont.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/pages/product-list.css">
+
+
+</head>
+<body>
+@@include('./common/head.html')
+@@include('./common/classify.html')
+    <div id="product-list" class="container product-list">
+        <div class="production-list">
+
+        </div>
+    </div>
+@@include('./common/backToTop.html')
+@@include('./common/footer.html')
+    <script id="production-list" type="text/html">
+        <div class="product-container">
+            {{each data value i}}
+            <div class="production-item">
+                <div class="product-img">
+                    <a href={{"./product.html?prodictId="+value.productId}}>
+                        <img src="" alt="" data-origin-src={{value.introductImage}} data-is-load="false" class="lazy-load-img">
+                    </a>
+                </div>
+                <div class="product-content">
+                    <p class="product-name">{{ value.name }}</p>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </script>
+    <script src="../js/app/product-list.js"></script>
+</body>
+</html>

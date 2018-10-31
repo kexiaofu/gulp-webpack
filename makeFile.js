@@ -17,27 +17,27 @@ fs.readFile('./temp/temp.html',(err,data)=>{
 
   console.log(odata);
 
-  let fileName = process.argv[name+1];
+  let fileName = process.argv[js+1];
 
   fs.stat(`./src/html/${fileName}.html`,(err,stat)=>{
     if(err) {
-      fs.writeFile(`./src/html/${fileName}.html`,odata,(err)=>{
+      fs.writeFile(`./src/tempHtml/${fileName}.html`,odata,(err)=>{
         if(err) {
           return console.log('写入出错')
 
         }
         console.log('创建HTML成功')
-      })
+      });
 
-      fs.writeFile(`./src/js/${fileName}.js`,'',(err)=>{
+      fs.writeFile(`./src/es6/app/${fileName}.js`,'',(err)=>{
         if(err) {
           return console.log('写入出错')
 
         }
         console.log('创建JS成功')
-      })
+      });
 
-      fs.writeFile(`./src/css/${fileName}.less`,'',(err)=>{
+      fs.writeFile(`./src/less/pages/${fileName}.less`,'',(err)=>{
         if(err) {
           return console.log('写入出错')
 

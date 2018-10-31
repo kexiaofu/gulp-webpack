@@ -2,26 +2,14 @@
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _carousel = _interopRequireDefault(require("../common/carousel"));
-
-var _mask = _interopRequireDefault(require("../common/mask"));
-
 var _api = require("../common/api");
 
 var _tools = require("../common/tools");
 
 var _template = _interopRequireDefault(require("../common/template.js"));
 
-window.onload = function () {
-  var mask = new _mask.default();
-  (0, _api.getCarousel)().then(function (res) {
-    var carousel = new _carousel.default({
-      autoPlay: false,
-      parent: 'carousel-container',
-      images: res
-    });
-  });
-  (0, _api.getProductionList)().then(function (res) {
+var getData = function getData(obj) {
+  (0, _api.getAllProductList)(obj).then(function (res) {
     var html = (0, _template.default)('production-list', {
       data: res
     });
@@ -37,3 +25,24 @@ window.onload = function () {
     };
   });
 };
+
+window.onload = function () {
+  var hash = document.location.hash,
+      groupId = '';
+  hash !== '' && (groupId = hash.substring(1));
+
+  if (groupId !== '') {
+    getData({
+      groupId: groupId
+    });
+  } else {
+    getData();
+  }
+};
+
+window.addEventListener("hashchange", function () {
+  console.log(document.location.hash.substring(1));
+  getData({
+    groupId: document.location.hash.substring(1)
+  });
+});

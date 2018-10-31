@@ -1,7 +1,12 @@
 <div class="nav-bar">
     <div class="left-part">
         <div class="logo">
-            <img src="../images/logo.png" alt="">
+            <a href="./index.html">
+                <img src="../images/logo.png" alt="">
+            </a>
+        </div>
+        <div class="func-item hover-blue">
+            <a href="./product-list.html">商店</a>
         </div>
     </div>
     <div class="right-part">
@@ -9,11 +14,11 @@
             <i class="iconfont icon-cx"></i>
             <!--<i class="fa fa-search"></i>-->
             <input type="text" class="search-input" placeholder="搜索百成墙纸网" style="display: none;">
-            <span class="to-search" onclick="toSearch()">搜索</span>
-            <i class="iconfont icon-close" style="display: none;" onclick="toClose()"></i>
+            <span class="to-search" >搜索</span>
+            <i class="iconfont icon-close" style="display: none;"></i>
         </div>
-        <div class="func-item hover-blue">登录</div>
-        <div class="func-item hover-blue">注册</div>
+        <div class="func-item hover-blue to-login">登录</div>
+        <div class="func-item hover-blue to-sign-up">注册</div>
         <div class="func-item">
             <i class="iconfont icon-gouwuche shopping-car"></i>
         </div>
@@ -21,52 +26,24 @@
 </div>
 
 <div class="login">
+    <div class="close-login-box">
+        <i class="iconfont icon-close"></i>
+    </div>
+    <div class="title">
+       Baicheng Digital
+    </div>
+    <p>登录到您的账户</p>
     <div class="login-input">
-        <input type="text" placeholder="请输入您的账号">
+        <i class="iconfont icon-wode"></i>
+        <input type="text" placeholder="请输入您的账号" id="account" value="aaa">
     </div>
     <div class="login-input">
-        <input type="text" placeholder="请输入您的密码">
+        <i class="iconfont icon-suo"></i>
+        <input type="password" placeholder="请输入您的密码" id="password" value="1qaz2wsx">
     </div>
-    <div class="operation">
-        <div class="submit">登录</div>
-        <div class="sign-up">注册</div>
-    </div>
+    <div class="submit">登录</div>
+    <p>我没有账户</p>
+    <div class="sign-up">注册</div>
 </div>
 
-
-<script>
-
-  var dispatchSomrthing = function (name) {
-    if (window.dispatchEvent) {
-      window.dispatchEvent(name);
-    } else {
-      window.fireEvent(name);
-    }
-  };
-
-  var toSearch = function () {
-    let searchInput = document.querySelector('.search-input'),
-      toSearch = document.querySelector('.to-search'),
-      close = document.querySelector('.icon-close');
-    toSearch.style.display = 'none';
-    searchInput.style.display = 'block';
-    close.style.display = 'block';
-    searchInput.focus();
-    var showSearchBox = new CustomEvent('show-search-box');
-    dispatchSomrthing(showSearchBox);
-  };
-
-  var toClose = function () {
-    let searchInput = document.querySelector('.search-input'),
-      toSearch = document.querySelector('.to-search'),
-      close = document.querySelector('.icon-close');
-    toSearch.style.display = 'block';
-    searchInput.style.display = 'none';
-    close.style.display = 'none';
-    var hideSearchBox = new CustomEvent('hide-search-box');
-    dispatchSomrthing(hideSearchBox);
-
-  };
-
-
-</script>
+<script src="../js/app/head.js"></script>
