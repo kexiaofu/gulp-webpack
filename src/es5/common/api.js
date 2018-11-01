@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getProductClassify = exports.getAllProductList = exports.toLogin = exports.getProductionList = exports.getCarousel = void 0;
+exports.getProductDetail = exports.getProductClassify = exports.getAllProductList = exports.toLogin = exports.getProductionList = exports.getCarousel = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -197,13 +197,27 @@ function () {
       while (1) {
         switch (_context5.prev = _context5.next) {
           case 0:
-            _context5.next = 2;
-            return apiRequire('getAllProductList', '/api/Product/getproductList', null, data, false);
+            console.log(data);
 
-          case 2:
+            if (!(data && data.hasOwnProperty('name'))) {
+              _context5.next = 7;
+              break;
+            }
+
+            _context5.next = 4;
+            return apiRequire('getAllProductList', '/api/Product/SearchProduct', null, data, false);
+
+          case 4:
             return _context5.abrupt("return", _context5.sent);
 
-          case 3:
+          case 7:
+            _context5.next = 9;
+            return apiRequire('getAllProductList', '/api/Product/getproductList', null, data, false);
+
+          case 9:
+            return _context5.abrupt("return", _context5.sent);
+
+          case 10:
           case "end":
             return _context5.stop();
         }
@@ -245,7 +259,38 @@ function () {
   return function getProductClassify() {
     return _ref6.apply(this, arguments);
   };
-}(); //getProductClassify,/api/Product/GetGroup
-
+}();
 
 exports.getProductClassify = getProductClassify;
+
+var getProductDetail =
+/*#__PURE__*/
+function () {
+  var _ref7 = (0, _asyncToGenerator2.default)(
+  /*#__PURE__*/
+  _regenerator.default.mark(function _callee7(data) {
+    return _regenerator.default.wrap(function _callee7$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            _context7.next = 2;
+            return apiRequire('getProductDetail', '/api/Product/GetProductDetail', null, data, false);
+
+          case 2:
+            return _context7.abrupt("return", _context7.sent);
+
+          case 3:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7, this);
+  }));
+
+  return function getProductDetail(_x7) {
+    return _ref7.apply(this, arguments);
+  };
+}(); //getProductClassify,api/Product/GetProductDetail?id=
+
+
+exports.getProductDetail = getProductDetail;

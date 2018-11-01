@@ -49,8 +49,17 @@ export const getProductionList = async ()=> await apiRequire('getProductionList'
 
 export const toLogin = async (account) => await apiRequire('account','/api/account/login',null,account);
 
-export const getAllProductList = async (data) => await apiRequire('getAllProductList','/api/Product/getproductList',null,data,false);
+export const getAllProductList = async (data) => {
+  console.log(data);
+  if(data && data.hasOwnProperty('name')) {
+    return await apiRequire('getAllProductList','/api/Product/SearchProduct',null,data,false);
+  } else {
+    return await apiRequire('getAllProductList','/api/Product/getproductList',null,data,false);
+  }
+};
 
 export const getProductClassify = async () => await apiRequire('getProductClassify','/api/Product/GetGroup',null);
 
-//getProductClassify,/api/Product/GetGroup
+export const getProductDetail = async (data) => await apiRequire('getProductDetail','/api/Product/GetProductDetail',null,data,false);
+
+//getProductClassify,api/Product/GetProductDetail?id=

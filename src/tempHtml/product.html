@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>产品详情</title>
+    <link rel="stylesheet" href="../css/common/base.css">
+    <link href="../css/common/iconfont.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/pages/product.css">
+
+</head>
+<body>
+@@include('./common/head.html')
+    <div id="product" class="product container">
+        <div class="product-container"></div>
+        <div class="product-detail"></div>
+    </div>
+@@include('./common/footer.html')
+<script id="product-info" type="text/html">
+    <div class="left-part">
+        <div class="show-box">
+            <img src={{ data.productImages.length > 0 ? data.productImages[0].imageUrl : null}} alt="" class="show-pic" />
+        </div>
+        <div class="pic-list">
+            {{ if data.productImages.length > 6}}
+            <div class="left-btn">
+                <i class="iconfont icon-left"></i>
+            </div>
+            {{/if}}
+            {{ if data.productImages.length > 0 }}
+            <div class="pic-container">
+                <ul class="pic-ul">
+                    {{each data.productImages image i}}
+                    <li class="pic-item">
+                        <img src={{ image.imageUrl }} alt="">
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+            {{/if}}
+            {{ if data.productImages.length > 6}}
+            <div class="right-btn">
+                <i class="iconfont icon-left"></i>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+    <div class="right-part">
+        <div class="product-name">
+            {{ data.name }}
+        </div>
+        <p class="product-description">
+            {{ data.description }}
+        </p>
+        <div class="price">
+            <p><span>价格：</span><i>￥</i> <i class="product-price">0</i></p>
+        </div>
+        <div class="product-props">
+            <p>产品属性</p>
+            {{ each data.productOptions prop i }}
+                <div class="props-item">
+                    <div class="prop-name">{{prop.name}}</div>
+                    <select name={{prop.name}} id={{'props'+prop.id}}>
+                        {{ each prop.optionValue op index}}
+                        <option value={{op.price}}>{{ op.name }}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            {{/each}}
+        </div>
+        <div class="buy-product">
+            <div class="quantity">
+                <input type="number" value="1" class="product-quantity">
+                <span class="changeQuantity add">+</span>
+                <span class="changeQuantity reduce">-</span>
+            </div>
+
+            <div class="add-to-car">
+                加入购物车
+            </div>
+
+        </div>
+    </div>
+</script>
+<script id="product-detail" type="text/html">
+    <div class="product-detail-info">
+        {{ each data.detailImages images i}}
+        <img src={{ images.imageUrl }} alt="">
+        {{/each}}
+    </div>
+</script>
+    <script src="../js/app/product.js"></script>
+</body>
+</html>
+
+<!--
+
+
+-->

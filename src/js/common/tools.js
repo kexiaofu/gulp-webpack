@@ -4,7 +4,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.imageLazyLoad = void 0;
+exports.getParameter = exports.imageLazyLoad = void 0;
 
 var imageLazyLoad = function imageLazyLoad(ele) {
   var clientHeight = document.documentElement.clientHeight,
@@ -20,4 +20,13 @@ var imageLazyLoad = function imageLazyLoad(ele) {
 };
 
 exports.imageLazyLoad = imageLazyLoad;
+
+var getParameter = function getParameter(sProp) {
+  var re = new RegExp(sProp + "=([^\&]*)", "i");
+  var a = re.exec(document.location.search);
+  if (a == null) return null;
+  return a[1];
+};
+
+exports.getParameter = getParameter;
 },{}]},{},[1]);

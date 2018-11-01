@@ -13,9 +13,7 @@
 @@include('./common/head.html')
 @@include('./common/classify.html')
     <div id="product-list" class="container product-list">
-        <div class="production-list">
-
-        </div>
+        <div class="production-list"></div>
     </div>
 @@include('./common/backToTop.html')
 @@include('./common/footer.html')
@@ -24,7 +22,7 @@
             {{each data value i}}
             <div class="production-item">
                 <div class="product-img">
-                    <a href={{"./product.html?prodictId="+value.productId}}>
+                    <a href={{"./product.html?productId="+value.id}} target="_blank">
                         <img src="" alt="" data-origin-src={{value.introductImage}} data-is-load="false" class="lazy-load-img">
                     </a>
                 </div>

@@ -10,6 +10,7 @@ var _template = _interopRequireDefault(require("../common/template.js"));
 
 var getData = function getData(obj) {
   (0, _api.getAllProductList)(obj).then(function (res) {
+    console.log(res);
     var html = (0, _template.default)('production-list', {
       data: res
     });
@@ -27,21 +28,28 @@ var getData = function getData(obj) {
 };
 
 window.onload = function () {
-  var hash = document.location.hash,
-      groupId = '';
-  hash !== '' && (groupId = hash.substring(1));
+  var search = (0, _tools.getParameter)('search');
 
-  if (groupId !== '') {
+  if (search !== null) {
     getData({
-      groupId: groupId
+      name: decodeURIComponent(search)
     });
   } else {
-    getData();
+    var hash = document.location.hash,
+        groupId = '';
+    hash !== '' && (groupId = hash.substring(1));
+
+    if (groupId !== '') {
+      getData({
+        groupId: groupId
+      });
+    } else {
+      getData();
+    }
   }
 };
 
 window.addEventListener("hashchange", function () {
-  console.log(document.location.hash.substring(1));
   getData({
     groupId: document.location.hash.substring(1)
   });

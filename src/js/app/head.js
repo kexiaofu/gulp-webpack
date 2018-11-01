@@ -2486,6 +2486,14 @@ var dispatchSomrthing = function dispatchSomrthing(bool) {
   }
 };
 
+var keyUpEvent = function keyUpEvent(e) {
+  console.log(e);
+
+  if (e.keyCode === 13) {
+    window.location = './product-list.html?search=' + document.querySelector('.search-input').value;
+  }
+};
+
 var toSearch = function toSearch() {
   var searchInput = document.querySelector('.search-input'),
       toSearch = document.querySelector('.to-search'),
@@ -2495,6 +2503,7 @@ var toSearch = function toSearch() {
   close.style.display = 'block';
   searchInput.focus();
   dispatchSomrthing(true);
+  searchInput.addEventListener('keyup', keyUpEvent);
 };
 
 var toClose = function toClose() {
@@ -2505,12 +2514,16 @@ var toClose = function toClose() {
   searchInput.style.display = 'none';
   close.style.display = 'none';
   dispatchSomrthing(false);
+  searchInput.removeEventListener('keyup', keyUpEvent);
 };
 
 var toShowLoginBox = function toShowLoginBox() {
   var login = document.querySelector('.login');
-  login.style.transform = 'translate(-50%,-50%) scale(1)';
-  login.style.opacity = 1;
+  login.style.display = 'block';
+  setTimeout(function () {
+    login.style.transform = 'translate(-50%,-50%) scale(1)';
+    login.style.opacity = 1;
+  }, 0);
   dispatchSomrthing(true);
 };
 
@@ -2518,6 +2531,9 @@ var toCloseLoginBox = function toCloseLoginBox() {
   var login = document.querySelector('.login');
   login.style.transform = 'translate(-50%,-50%) scale(.5)';
   login.style.opacity = 0;
+  setTimeout(function () {
+    login.style.display = 'none';
+  }, 500);
   dispatchSomrthing(false);
 };
 
@@ -2550,7 +2566,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getProductClassify = exports.getAllProductList = exports.toLogin = exports.getProductionList = exports.getCarousel = void 0;
+exports.getProductDetail = exports.getProductClassify = exports.getAllProductList = exports.toLogin = exports.getProductionList = exports.getCarousel = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -2566,29 +2582,32 @@ function () {
   var _ref = (0, _asyncToGenerator2.default)(
   /*#__PURE__*/
   _regenerator.default.mark(function _callee(name, url, method, data) {
-    var storageTime;
+    var storage,
+        storageTime,
+        _args = arguments;
     return _regenerator.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
+            storage = _args.length > 4 && _args[4] !== undefined ? _args[4] : true;
             storageTime = new Date().getTime();
 
-            if (!(window.sessionStorage.getItem(name) !== null && storageTime - window.sessionStorage.getItem(name + '-time') < period)) {
-              _context.next = 5;
+            if (!(storage && window.sessionStorage.getItem(name) !== null && storageTime - window.sessionStorage.getItem(name + '-time') < period)) {
+              _context.next = 6;
               break;
             }
 
             return _context.abrupt("return", JSON.parse(window.sessionStorage.getItem(name)));
 
-          case 5:
+          case 6:
             console.log("require ".concat(name, " again"));
 
             if (!(method === undefined || method === null)) {
-              _context.next = 12;
+              _context.next = 13;
               break;
             }
 
-            _context.next = 9;
+            _context.next = 10;
             return _axios.default.get(url, {
               params: data
             }).then(function (res) {
@@ -2603,11 +2622,11 @@ function () {
               alert(err);
             });
 
-          case 9:
+          case 10:
             return _context.abrupt("return", _context.sent);
 
-          case 12:
-            _context.next = 14;
+          case 13:
+            _context.next = 15;
             return _axios.default.post(url, data).then(function (res) {
               if (res.data.code === 2000) {
                 window.sessionStorage.setItem(name, JSON.stringify(res.data.result));
@@ -2620,10 +2639,10 @@ function () {
               alert(err);
             });
 
-          case 14:
+          case 15:
             return _context.abrupt("return", _context.sent);
 
-          case 15:
+          case 16:
           case "end":
             return _context.stop();
         }
@@ -2739,13 +2758,27 @@ function () {
       while (1) {
         switch (_context5.prev = _context5.next) {
           case 0:
-            _context5.next = 2;
-            return apiRequire('getAllProductList', '/api/Product/getproductList', null, data);
+            console.log(data);
 
-          case 2:
+            if (!(data && data.hasOwnProperty('name'))) {
+              _context5.next = 7;
+              break;
+            }
+
+            _context5.next = 4;
+            return apiRequire('getAllProductList', '/api/Product/SearchProduct', null, data, false);
+
+          case 4:
             return _context5.abrupt("return", _context5.sent);
 
-          case 3:
+          case 7:
+            _context5.next = 9;
+            return apiRequire('getAllProductList', '/api/Product/getproductList', null, data, false);
+
+          case 9:
+            return _context5.abrupt("return", _context5.sent);
+
+          case 10:
           case "end":
             return _context5.stop();
         }
@@ -2787,10 +2820,41 @@ function () {
   return function getProductClassify() {
     return _ref6.apply(this, arguments);
   };
-}(); //getProductClassify,/api/Product/GetGroup
-
+}();
 
 exports.getProductClassify = getProductClassify;
+
+var getProductDetail =
+/*#__PURE__*/
+function () {
+  var _ref7 = (0, _asyncToGenerator2.default)(
+  /*#__PURE__*/
+  _regenerator.default.mark(function _callee7(data) {
+    return _regenerator.default.wrap(function _callee7$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            _context7.next = 2;
+            return apiRequire('getProductDetail', '/api/Product/GetProductDetail', null, data, false);
+
+          case 2:
+            return _context7.abrupt("return", _context7.sent);
+
+          case 3:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7, this);
+  }));
+
+  return function getProductDetail(_x7) {
+    return _ref7.apply(this, arguments);
+  };
+}(); //getProductClassify,api/Product/GetProductDetail?id=
+
+
+exports.getProductDetail = getProductDetail;
 },{"@babel/runtime/helpers/asyncToGenerator":1,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/regenerator":5,"axios":6}],37:[function(require,module,exports){
 "use strict";
 

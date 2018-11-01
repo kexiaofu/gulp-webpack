@@ -10,3 +10,11 @@ export const imageLazyLoad = (ele) =>{
     }
   }
 };
+
+export const getParameter =  (sProp ) =>{
+  let re = new RegExp (sProp + "=([^\&]*)" , "i" );
+  let a = re . exec (document . location . search );
+  if (a == null )
+    return null ;
+  return a [ 1 ];
+};
